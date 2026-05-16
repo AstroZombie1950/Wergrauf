@@ -148,7 +148,17 @@ function renderProducts(list) {
 					<span class="product-price">${fmt(p.price)}</span>
 					${p.old_price > p.price ? `<span class="product-price-old">${fmt(p.old_price)}</span>` : ''}
 				</div>
-				<button class="product-buy" type="button" onclick="addToCart(${p.article},event)">Купить</button>
+				<button class="product-buy" type="button" onclick="catalogAddToCart(${JSON.stringify({
+						article: String(p.article),
+						name: p.name,
+						price: p.price,
+						old_price: p.old_price || 0,
+						image: p.image || '',
+						slug: p.slug || '',
+						section_url: SECTION_URL,
+						promo_code: p.promo_code || '',
+						discount_percent: p.discount_percent || '',
+					}).replace(/"/g,'&quot;')},event)">Купить</button>
 			</article>
 		`;
 	}).join('');
@@ -228,11 +238,13 @@ function bindEvents() {
 	closeBtn?.addEventListener('click', () => { panel.classList.remove('is-mobile-open'); document.body.style.overflow = ''; });
 }
 
-// --- Корзина (заглушка) ---
-function addToCart(article, e) {
+// --- Корзина ---
+function catalogAddToCart(product, e) {
 	e.preventDefault();
 	e.stopPropagation();
-	// TODO: логика корзины
+	if (typeof cartAdd === 'function') {
+		cartAdd(product);
+	}
 }
 
 // --- Утилиты ---

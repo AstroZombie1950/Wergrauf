@@ -3,10 +3,17 @@
    Подключается из product.php каждого раздела
    Ожидает переменные: $section, $section_name, $section_url, $has_sizes */
 
+// Подключаем helpers чтобы получить товар с оверрайдами
+require_once $_SERVER['DOCUMENT_ROOT'] . '/admin/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/admin/helpers.php';
+
 $slug = $_GET['slug'] ?? '';
 
-$json_file = $_SERVER['DOCUMENT_ROOT'] . '/data/' . $section . '.json';
-$products  = file_exists($json_file) ? json_decode(file_get_contents($json_file), true) : [];
+// load_products применяет оверрайды, _deleted_specs, _extra_specs
+$products = load_products($section);
+
+// Скрытые товары не показываем
+$products = array_values(array_filter($products, fn($p) => empty($p['hidden'])));
 
 // Ищем товар по slug
 $product = null;
@@ -428,9 +435,28 @@ $gallery = array_unique($gallery);
 					<?php endif ?>
 
 					<!-- Кнопки -->
+					<?php
+					$_cart_product = json_encode([
+						'article'          => (string)$product['article'],
+						'name'             => $product['name'],
+						'price'            => (int)$product['price'],
+						'old_price'        => (int)($product['old_price'] ?? 0),
+						'image'            => $product['image'] ?? '',
+						'slug'             => $product['slug'] ?? '',
+						'section_url'      => $section_url,
+						'promo_code'       => $product['promo_code'] ?? '',
+						'discount_percent' => $product['discount_percent'] ?? '',
+					], JSON_UNESCAPED_UNICODE);
+					?>
 					<div class="product-actions">
-						<button class="product-btn" type="button" onclick="addToCart(<?= (int)$product['article'] ?>)">Добавить в корзину</button>
-						<button class="product-btn" type="button" onclick="buyOneClick(<?= (int)$product['article'] ?>)">Купить в один клик</button>
+						<button class="product-btn" type="button"
+							onclick='cartAdd(<?= pt_h($_cart_product) ?>)'>
+							Добавить в корзину
+						</button>
+						<button class="product-btn" type="button"
+							onclick='oneClickOpen(<?= pt_h($_cart_product) ?>)'>
+							Купить в один клик
+						</button>
 					</div>
 
 					<!-- Фичи -->
@@ -563,8 +589,7 @@ $gallery = array_unique($gallery);
 		c.classList.toggle('is-collapsed');
 		this.textContent = c.classList.contains('is-collapsed') ? 'Показать полностью' : 'Свернуть';
 	});
-	function addToCart(article) { console.log('addToCart:', article); }
-	function buyOneClick(article) { console.log('buyOneClick:', article); }
+	// корзина: cart.js
 	</script>
 </div>
 </body>

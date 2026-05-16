@@ -648,11 +648,24 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 					<?php endif ?>
 
 					<!-- Кнопки -->
+					<?php $_cp = json_encode([
+						'article'          => (string)$product['article'],
+						'name'             => $product['name'],
+						'price'            => (int)$product['price'],
+						'old_price'        => (int)($product['old_price'] ?? 0),
+						'image'            => $product['image'] ?? '',
+						'slug'             => $slug,
+						'section_url'      => '/shower_system/',
+						'promo_code'       => $product['promo_code'] ?? '',
+						'discount_percent' => $product['discount_percent'] ?? '',
+					], JSON_UNESCAPED_UNICODE); ?>
 					<div class="product-actions">
-						<button class="product-btn" type="button" onclick="addToCart(<?= (int)$product['article'] ?>)">
+						<button class="product-btn" type="button"
+							onclick='cartAdd(<?= h($_cp) ?>)'>
 							Добавить в корзину
 						</button>
-						<button class="product-btn" type="button" onclick="buyOneClick(<?= (int)$product['article'] ?>)">
+						<button class="product-btn" type="button"
+							onclick='oneClickOpen(<?= h($_cp) ?>)'>
 							Купить в один клик
 						</button>
 					</div>
@@ -842,15 +855,7 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 	});
 
 	/* --- Корзина (заглушки, подключим позже) --- */
-	function addToCart(article) {
-		// TODO: логика корзины
-		console.log('addToCart:', article);
-	}
-
-	function buyOneClick(article) {
-		// TODO: логика быстрого заказа
-		console.log('buyOneClick:', article);
-	}
+	// корзина: cart.js
 	</script>
 </div>
 </body>

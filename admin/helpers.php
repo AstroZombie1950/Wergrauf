@@ -26,6 +26,23 @@ function load_products(string $section): array {
 			$product = array_merge($product, $overrides[$article]);
 			$product['_has_overrides'] = true;
 		}
+		// Убираем удалённые характеристики
+		if (!empty($product['_deleted_specs']) && !empty($product['specs'])) {
+			$deleted = $product['_deleted_specs'];
+			$product['specs'] = array_values(
+				array_filter($product['specs'], fn($s) => !in_array($s['key'], $deleted, true))
+			);
+		}
+		// Добавляем доп. характеристики из оверрайда в конец списка
+		if (!empty($product['_extra_specs'])) {
+			foreach ($product['_extra_specs'] as $es) {
+				$product['specs'][] = [
+					'key'   => '_extra_' . md5($es['label']),
+					'label' => $es['label'],
+					'value' => $es['value'],
+				];
+			}
+		}
 	}
 	unset($product);
 

@@ -212,6 +212,7 @@ function sort_arrow(string $col, string $cur_sort, string $cur_dir): string {
 		.empty { text-align: center; padding: 48px 24px; color: var(--muted); font-size: 14px; }
 		.empty p { margin-top: 8px; font-size: 13px; }
 	</style>
+	<script src="/admin/admin_ui.js"></script>
 </head>
 <body>
 
@@ -367,18 +368,20 @@ function sort_arrow(string $col, string $cur_sort, string $cur_dir): string {
 
 							<!-- Сброс оверрайдов -->
 							<?php if (!empty($p['_has_overrides']) && !$manual): ?>
-								<form method="POST" style="display:inline"
-									onsubmit="return confirm('Сбросить все ручные правки для этого товара?')">
+								<form method="POST" style="display:inline">
 									<input type="hidden" name="article" value="<?= h($art) ?>">
-									<button class="btn btn--danger-outline" type="submit" name="delete_override" value="1">↺ Сброс</button>
+									<input type="hidden" name="delete_override" value="1">
+									<button class="btn btn--danger-outline" type="button"
+								onclick="(function(btn){ adminConfirm('Сбросить правки?', 'Ручные изменения этого товара будут удалены, данные вернутся из Google Sheets.', () => btn.closest('form').submit(), {confirmText:'Сбросить',danger:false}); })(this)">↺ Сброс</button>
 								</form>
 							<?php endif ?>
 
 							<!-- Удалить -->
-							<form method="POST" style="display:inline"
-								onsubmit="return confirm('⚠️ НЕОБРАТИМОЕ ДЕЙСТВИЕ\n\nУдалить товар «<?= h(addslashes($p['name'] ?? '')) ?>»?\n\nЕсли товар есть в Google Sheets — вернётся при следующей синхронизации.')">
+							<form method="POST" style="display:inline">
 								<input type="hidden" name="article" value="<?= h($art) ?>">
-								<button class="btn btn--danger" type="submit" name="delete_product" value="1">🗑</button>
+								<input type="hidden" name="delete_product" value="1">
+								<button class="btn btn--danger" type="button"
+								onclick="(function(btn){ adminConfirm('Удалить товар?', 'Необратимое действие. Если товар есть в Google Sheets — вернётся при следующей синхронизации.', () => btn.closest('form').submit(), {confirmText:'Удалить',danger:true}); })(this)">🗑</button>
 							</form>
 						</td>
 					</tr>
@@ -420,11 +423,15 @@ function bulkSubmit(action) {
 	const checked = [...rowChecks()].filter(c => c.checked);
 	if (!checked.length) return;
 
-	const labels = { hide: 'скрыть', show: 'показать', delete: '⚠️ УДАЛИТЬ' };
-	if (!confirm(`Вы уверены? Действие «${labels[action]}» будет применено к ${checked.length} товарам.`)) return;
+	const labels   = { hide: 'Скрыть', show: 'Показать', delete: 'Удалить' };
+	const isDanger = action === 'delete';
+	const text     = `Действие будет применено к ${checked.length} товарам.`
+		+ (isDanger ? ' Удалённые товары вернутся при синхронизации с Google Sheets.' : '');
 
-	document.getElementById('bulk-action-input').value = action;
-	document.getElementById('bulk-form').submit();
+	adminConfirm(labels[action] + ' выбранные товары?', text, () => {
+		document.getElementById('bulk-action-input').value = action;
+		document.getElementById('bulk-form').submit();
+	}, { confirmText: labels[action], danger: isDanger });
 }
 </script>
 
