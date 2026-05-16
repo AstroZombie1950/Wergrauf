@@ -1,0 +1,19 @@
+Options +FollowSymLinks
+Options -Indexes
+RewriteEngine On
+
+RewriteBase /
+
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+RewriteRule ^shower_system/([a-z0-9_-]+)/?$       /shower_system/product.php?slug=$1       [L,QSA]
+RewriteRule ^kitchen_faucets/([a-z0-9_-]+)/?$     /kitchen_faucets/product.php?slug=$1     [L,QSA]
+RewriteRule ^floor_faucets/([a-z0-9_-]+)/?$       /floor_faucets/product.php?slug=$1       [L,QSA]
+RewriteRule ^bath_faucets/([a-z0-9_-]+)/?$        /bath_faucets/product.php?slug=$1        [L,QSA]
+RewriteRule ^sink_faucets/([a-z0-9_-]+)/?$        /sink_faucets/product.php?slug=$1        [L,QSA]
+RewriteRule ^hygienic_shower/([a-z0-9_-]+)/?$     /hygienic_shower/product.php?slug=$1     [L,QSA]
+RewriteRule ^accessories/([a-z0-9_-]+)/?$         /accessories/product.php?slug=$1         [L,QSA]
+RewriteRule ^towel_warmers/([a-z0-9_-]+)/?$       /towel_warmers/product.php?slug=$1       [L,QSA]
+RewriteRule ^components/([a-z0-9_-]+)/?$          /components/product.php?slug=$1          [L,QSA]

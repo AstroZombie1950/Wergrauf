@@ -1,0 +1,15 @@
+# Секреты
+/admin/config.php
+
+# Данные (генерируются синхронизацией)
+/data/
+
+# Мусор который уже есть в проекте
+node-compile-cache/
+phantomjs/
+rclone-mount-config.json
+
+# Системное
+.DS_Store
+Thumbs.db
+*.log
