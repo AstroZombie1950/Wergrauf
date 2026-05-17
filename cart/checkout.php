@@ -138,7 +138,6 @@
 </div>
 
 <?php include($_SERVER['DOCUMENT_ROOT'] . '/source_include/foot.html'); ?>
-<script src="/source_js/cart.js"></script>
 <script>
 function fmtPrice(n) {
 	return n.toLocaleString('ru-RU') + ' ₽';

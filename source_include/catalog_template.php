@@ -241,7 +241,8 @@ function ct_h(string $s): string {
 	const SECTION_URL     = '<?= $section_url ?>';
 	const ACTIVE_FILTERS  = <?= json_encode($filters) ?>;
 	</script>
-	<script src="/source_js/catalog.js" defer></script>
+	<script src="/source_js/cart.js"></script>
+	<script src="/source_js/catalog.js"></script>
 </div>
 </body>
 </html>

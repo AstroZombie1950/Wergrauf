@@ -136,7 +136,7 @@ function fmt_price(int $p): string {
 }
 
 function tg_notify(array $order): void {
-	if (TG_BOT_TOKEN === '8825703794:AAHrPrXtzx6xQwjojc880jjjIy12n-kR0Qw') return;
+	if (TG_BOT_TOKEN === 'TG_BOT_TOKEN') return;
 
 	$c     = $order['customer'];
 	$src   = $order['source'] === 'one_click' ? '⚡ Один клик' : '🛒 Корзина';

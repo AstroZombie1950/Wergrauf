@@ -836,6 +836,7 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 
 	<?php include($_SERVER['DOCUMENT_ROOT'].'/source_include/foot.html'); ?>
 
+	<script src="/source_js/cart.js"></script>
 	<script src="/source_js/main.js" defer></script>
 	<script>
 	/* --- Галерея --- */

@@ -577,6 +577,7 @@ $gallery = array_unique($gallery);
 	</section>
 
 	<?php include($_SERVER['DOCUMENT_ROOT'].'/source_include/foot.html'); ?>
+	<script src="/source_js/cart.js"></script>
 	<script src="/source_js/main.js" defer></script>
 	<script>
 	function ptSwitchImage(btn, src) {

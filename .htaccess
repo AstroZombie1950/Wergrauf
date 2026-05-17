@@ -17,3 +17,8 @@ RewriteRule ^hygienic_shower/([a-z0-9_-]+)/?$     /hygienic_shower/product.php?s
 RewriteRule ^accessories/([a-z0-9_-]+)/?$         /accessories/product.php?slug=$1         [L,QSA]
 RewriteRule ^towel_warmers/([a-z0-9_-]+)/?$       /towel_warmers/product.php?slug=$1       [L,QSA]
 RewriteRule ^components/([a-z0-9_-]+)/?$          /components/product.php?slug=$1          [L,QSA]
+
+# Страницы ошибок
+ErrorDocument 404 /404.php
+ErrorDocument 403 /403.php
+ErrorDocument 500 /500.php

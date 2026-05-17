@@ -91,6 +91,9 @@ function cartUpdateBadge() {
 	document.querySelectorAll('.js-cart-badge').forEach(el => {
 		el.textContent = count;
 		el.style.display = count > 0 ? 'flex' : 'none';
+		/* opacity управляется через .not-empty на родителе в main.css */
+		const icon = el.closest('.cart__icon');
+		if (icon) icon.classList.toggle('not-empty', count > 0);
 	});
 }
 
@@ -308,7 +311,8 @@ function catalogAddToCart(product, e) {
 }
 
 /* ===== INIT ===== */
-
-document.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'loading') {
+	document.addEventListener('DOMContentLoaded', cartUpdateBadge);
+} else {
 	cartUpdateBadge();
-});
+}
