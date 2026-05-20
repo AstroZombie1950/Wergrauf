@@ -1,0 +1,10 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /data/
+Disallow: /cart/
+Disallow: /order/
+Disallow: /redirect/
+
+Allow: /
+
+Sitemap: https://wergrauf.ru/sitemap.php

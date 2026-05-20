@@ -14,8 +14,8 @@
 	<meta property="og:url" content="https://wergrauf.ru/contacts">
 	<meta property="og:image" content="https://wergrauf.ru/images/logo_img.png">
     <link rel="icon" href="https://wergrauf.ru/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="https://wergrauf.ru/source_css/main.css" media="all">
-    <link rel="stylesheet" type="text/css" href="https://wergrauf.ru/source_css/second.css" media="all">
+    <link rel="stylesheet" type="text/css" href="/source_css/wg.css" media="all">
+    <link rel="stylesheet" type="text/css" href="/source_css/second.css" media="all">
 </head>
 
 <body class="cms-index-index cms-home chrome undefined header-fixed carrotquest-message-noscroll">
@@ -43,6 +43,11 @@
 
                 <div class="contacts-box">
                     <div class="contact-item">
+                        <h3>ИП Елистратов А.Р.</h3>
+                        <span class="contact-link">ИНН 502919337872</span>
+                    </div>
+
+                    <div class="contact-item">
                         <h3>Телефон</h3>
                         <a class="contact-link" href="tel:+79777844447">
                             +7 (977) 784-44-47
@@ -51,8 +56,8 @@
 
                     <div class="contact-item">
                         <h3>Электронная почта</h3>
-                        <a class="contact-link" href="mailto:clients@wergrauf.ru">
-                            clients@wergrauf.ru
+                        <a class="contact-link" href="mailto:wergraufru@yandex.ru">
+                            wergraufru@yandex.ru
                         </a>
                     </div>
 
@@ -64,9 +69,9 @@
                     </div>
 
                     <div class="contact-item">
-                        <h3>WhatsApp</h3>
-                        <a class="contact-link" href="https://wa.me/79777844447" target="_blank" rel="noopener noreferrer">
-                            Написать в WhatsApp
+                        <h3>Max</h3>
+                        <a class="contact-link" href="https://max.ru/join/eKhzlC2n2crARo1pypZTj7DxbLPhj2Ck3MGMbz0_2rQ" target="_blank" rel="noopener noreferrer">
+                            Написать в Max
                         </a>
                     </div>
                 </div>

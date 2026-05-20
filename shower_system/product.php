@@ -3,12 +3,11 @@
 
 $slug = $_GET['slug'] ?? '';
 
-// Загружаем данные
-$json_file = $_SERVER['DOCUMENT_ROOT'] . '/data/shower_system.json';
-$products  = file_exists($json_file) ? json_decode(file_get_contents($json_file), true) : [];
-
-// Ищем товар по slug
-$product = null;
+// Загружаем данные с оверрайдами через helpers
+require_once $_SERVER['DOCUMENT_ROOT'] . '/admin/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/admin/helpers.php';
+$products = load_products('shower_system');
+$product  = null;
 foreach ($products as $p) {
 	if (($p['slug'] ?? '') === $slug) {
 		$product = $p;
@@ -24,10 +23,6 @@ if (!$product) {
 }
 
 // --- Утилиты ---
-function h(string $s): string {
-	return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
-}
-
 function fmt_price(int $price): string {
 	return number_format($price, 0, '.', ' ') . ' ₽';
 }
@@ -146,7 +141,7 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 	<meta property="og:image" content="<?= h($og_image) ?>">
 	<link rel="canonical" href="<?= $canonical ?>">
 	<link rel="icon" href="https://wergrauf.ru/favicon.ico" type="image/x-icon">
-	<link rel="stylesheet" type="text/css" href="/source_css/main.css" media="all">
+	<link rel="stylesheet" type="text/css" href="/source_css/wg.css" media="all">
 
 	<!-- Schema.org Product -->
 	<script type="application/ld+json">

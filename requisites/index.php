@@ -14,8 +14,8 @@
 	<meta property="og:url" content="https://wergrauf.ru/requisites">
 	<meta property="og:image" content="https://wergrauf.ru/images/logo_img.png">
     <link rel="icon" href="https://wergrauf.ru/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="https://wergrauf.ru/source_css/main.css" media="all">
-    <link rel="stylesheet" type="text/css" href="https://wergrauf.ru/source_css/second.css" media="all">
+    <link rel="stylesheet" type="text/css" href="/source_css/wg.css" media="all">
+    <link rel="stylesheet" type="text/css" href="/source_css/second.css" media="all">
 </head>
 
 <body class="cms-index-index cms-home chrome undefined header-fixed carrotquest-message-noscroll">

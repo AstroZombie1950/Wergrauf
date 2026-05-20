@@ -2,9 +2,10 @@
 /* catalog_template.php — общий шаблон каталога
    Ожидает: $section, $section_name, $section_url, $filters */
 
-$json_file = $_SERVER['DOCUMENT_ROOT'] . '/data/' . $section . '.json';
-$products  = file_exists($json_file) ? json_decode(file_get_contents($json_file), true) : [];
-$count     = count($products);
+require_once $_SERVER['DOCUMENT_ROOT'] . '/admin/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/admin/helpers.php';
+$products = load_products($section);
+$count    = count($products);
 
 function ct_h(string $s): string {
 	return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
@@ -24,7 +25,7 @@ function ct_h(string $s): string {
 	<meta property="og:image" content="https://wergrauf.ru/images/logo_img.png">
 	<link rel="canonical" href="https://wergrauf.ru<?= $section_url ?>">
 	<link rel="icon" href="https://wergrauf.ru/favicon.ico" type="image/x-icon">
-	<link rel="stylesheet" type="text/css" href="https://wergrauf.ru/source_css/main.css" media="all">
+	<link rel="stylesheet" type="text/css" href="https://wergrauf.ru/source_css/wg.css" media="all">
 	<script type="application/ld+json">
 	{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
 		{"@type":"ListItem","position":1,"name":"Главная","item":"https://wergrauf.ru/"},
@@ -102,7 +103,7 @@ function ct_h(string $s): string {
 </head>
 <body class="cms-index-index cms-home chrome undefined header-fixed">
 <div class="page-wrapper">
-	<?php include($_SERVER['DOCUMENT_ROOT'].'/source_include/head_collection.html'); ?>
+	<?php include($_SERVER['DOCUMENT_ROOT'].'/source_include/head.html'); ?>
 
 	<main class="catalog">
 		<nav class="breadcrumbs">

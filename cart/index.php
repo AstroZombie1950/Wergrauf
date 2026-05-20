@@ -7,7 +7,7 @@
 	<meta name="description" content="Корзина интернет-магазина WERGRAUF">
 	<meta name="robots" content="noindex">
 	<link rel="icon" href="https://wergrauf.ru/favicon.ico" type="image/x-icon">
-	<link rel="stylesheet" href="/source_css/main.css" media="all">
+	<link rel="stylesheet" href="/source_css/wg.css" media="all">
 	<style>
 	*, *::before, *::after { box-sizing: border-box; }
 	body { margin: 0; font-family: "Roboto", Arial, sans-serif; color: #36393e; }

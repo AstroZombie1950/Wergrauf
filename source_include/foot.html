@@ -299,6 +299,53 @@
                     </div>
                 </div>
             </div>
+            
+            <script>
+                /* Подписка на новости */
+                document.addEventListener('DOMContentLoaded', function () {
+                    var form = document.querySelector('.pre-footer__form');
+                    if (!form) return;
+
+                    form.addEventListener('submit', function (e) {
+                        e.preventDefault();
+
+                        var input  = form.querySelector('input[type=email]');
+                        var button = form.querySelector('button[type=submit]');
+                        var email  = input ? input.value.trim() : '';
+                        if (!email) return;
+
+                        var origText = button.textContent;
+                        button.disabled = true;
+                        button.textContent = '...';
+
+                        var fd = new FormData();
+                        fd.append('email', email);
+
+                        fetch('/cart/subscribe.php', { method: 'POST', body: fd })
+                            .then(function (r) { return r.json(); })
+                            .then(function (data) {
+                                if (data.ok) {
+                                    input.value = '';
+                                    button.textContent = data.message || 'Готово!';
+                                    setTimeout(function () {
+                                        button.disabled = false;
+                                        button.textContent = origText;
+                                    }, 3000);
+                                } else {
+                                    button.textContent = data.error || 'Ошибка';
+                                    setTimeout(function () {
+                                        button.disabled = false;
+                                        button.textContent = origText;
+                                    }, 2000);
+                                }
+                            })
+                            .catch(function () {
+                                button.disabled = false;
+                                button.textContent = origText;
+                            });
+                    });
+                });
+            </script>
             <script src="/source_js/main.js" defer></script>
             <script>
                 document.addEventListener("DOMContentLoaded", function () {

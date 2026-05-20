@@ -153,7 +153,7 @@ $gallery = array_unique($gallery);
 	<meta property="og:image" content="<?= pt_h($og_image) ?>">
 	<link rel="canonical" href="<?= $canonical ?>">
 	<link rel="icon" href="https://wergrauf.ru/favicon.ico" type="image/x-icon">
-	<link rel="stylesheet" type="text/css" href="/source_css/main.css" media="all">
+	<link rel="stylesheet" type="text/css" href="/source_css/wg.css" media="all">
 	<script type="application/ld+json">
 	{
 		"@context": "https://schema.org",
