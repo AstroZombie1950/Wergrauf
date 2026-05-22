@@ -18,6 +18,14 @@ $section_name = SECTION_NAMES[$section];
 // --- Одиночные POST-действия ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+	// Сохранить порядок
+	if (isset($_POST['save_order'])) {
+		$articles = array_filter(array_map('trim', (array)$_POST['order_articles']));
+		save_order($section, array_values($articles));
+		header('Location: /admin/catalog.php?section=' . urlencode($section) . '&sorted=1');
+		exit;
+	}
+
 	// Сброс оверрайдов
 	if (isset($_POST['delete_override'])) {
 		$article = $_POST['article'] ?? '';
@@ -70,10 +78,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	}
 }
 
+// --- Режим сортировки ---
+$sort_mode   = isset($_GET['sort_mode']);
+$sort_saved  = isset($_GET['sorted']);
+
 // --- Загрузка и фильтрация ---
 $products = load_products($section);
 
-$search = trim($_GET['q'] ?? '');
+$search = $sort_mode ? '' : trim($_GET['q'] ?? '');
 if ($search !== '') {
 	$q        = mb_strtolower($search);
 	$products = array_filter($products, function($p) use ($q) {
@@ -83,18 +95,22 @@ if ($search !== '') {
 	});
 }
 
-// --- Сортировка ---
-$sort = $_GET['sort'] ?? 'name';
+// --- Сортировка столбцов (не в режиме drag-and-drop) ---
+$sort = $_GET['sort'] ?? '';
 $dir  = $_GET['dir']  ?? 'asc';
 
-usort($products, function($a, $b) use ($sort, $dir) {
-	$va = $a[$sort] ?? '';
-	$vb = $b[$sort] ?? '';
-	$cmp = is_numeric($va) && is_numeric($vb)
-		? $va <=> $vb
-		: mb_strtolower((string)$va) <=> mb_strtolower((string)$vb);
-	return $dir === 'desc' ? -$cmp : $cmp;
-});
+if (!$sort_mode && $sort !== '') {
+	// Явная сортировка по столбцу — применяем usort
+	usort($products, function($a, $b) use ($sort, $dir) {
+		$va = $a[$sort] ?? '';
+		$vb = $b[$sort] ?? '';
+		$cmp = is_numeric($va) && is_numeric($vb)
+			? $va <=> $vb
+			: mb_strtolower((string)$va) <=> mb_strtolower((string)$vb);
+		return $dir === 'desc' ? -$cmp : $cmp;
+	});
+}
+// Если sort не задан — товары уже в порядке из load_products (с учётом order-файла)
 
 $total = count($products);
 
@@ -211,6 +227,14 @@ function sort_arrow(string $col, string $cur_sort, string $cur_dir): string {
 		/* Пусто */
 		.empty { text-align: center; padding: 48px 24px; color: var(--muted); font-size: 14px; }
 		.empty p { margin-top: 8px; font-size: 13px; }
+
+		/* Drag-and-drop сортировка */
+		.drag-handle { cursor: grab; color: var(--muted); font-size: 16px; padding: 0 4px; user-select: none; }
+		.drag-handle:active { cursor: grabbing; }
+		tr.is-dragging { opacity: .4; }
+		tr.drag-over td { border-top: 2px solid var(--accent-h); }
+		.sort-mode-bar { background: #e8f0fe; border: 1px solid #b3c8f5; border-radius: 8px; padding: 10px 16px; margin-bottom: 14px; display: flex; align-items: center; gap: 12px; font-size: 13px; color: #1a3a6e; }
+		.sort-mode-bar strong { font-weight: 600; }
 	</style>
 	<script src="/admin/admin_ui.js"></script>
 </head>
@@ -225,6 +249,13 @@ function sort_arrow(string $col, string $cur_sort, string $cur_dir): string {
 	<a class="topbar__logout" href="/admin/?logout">Выйти</a>
 </div>
 
+<!-- Навигация -->
+<nav class="admin-nav" style="background:#fff;border-bottom:1px solid #e2e4e9;padding:0 24px;display:flex;gap:4px;position:sticky;top:52px;z-index:99;">
+	<a style="display:inline-flex;align-items:center;gap:6px;padding:10px 14px;font-size:13px;font-weight:500;color:#8a8f9a;text-decoration:none;border-bottom:2px solid transparent;" href="/admin/">🗂 Дашборд</a>
+	<a style="display:inline-flex;align-items:center;gap:6px;padding:10px 14px;font-size:13px;font-weight:500;color:#8a8f9a;text-decoration:none;border-bottom:2px solid transparent;" href="/admin/home_edit.php">🏠 Главная страница</a>
+	<a style="display:inline-flex;align-items:center;gap:6px;padding:10px 14px;font-size:13px;font-weight:500;color:#8a8f9a;text-decoration:none;border-bottom:2px solid transparent;" href="/admin/log.php">📋 Лог синхронизаций</a>
+</nav>
+
 <div class="page">
 
 	<div class="toolbar">
@@ -232,9 +263,27 @@ function sort_arrow(string $col, string $cur_sort, string $cur_dir): string {
 		<div class="toolbar__title"><?= h($section_name) ?></div>
 		<div class="toolbar__count"><?= $total ?> товаров</div>
 		<a class="btn btn--primary" href="/admin/product_new.php?section=<?= h($section) ?>">＋ Новый товар</a>
+		<?php if (!$sort_mode): ?>
+			<a class="btn btn--outline" href="?section=<?= h($section) ?>&sort_mode">⇅ Сортировка</a>
+		<?php else: ?>
+			<a class="btn btn--outline" href="?section=<?= h($section) ?>">✕ Выйти из сортировки</a>
+		<?php endif ?>
 	</div>
 
-	<!-- Поиск -->
+	<?php if ($sort_saved): ?>
+	<div class="sort-mode-bar" style="background:#e8f5e9;border-color:#a5d6a7;color:#1b5e20;">
+		✅ <strong>Порядок сохранён.</strong>
+	</div>
+	<?php endif ?>
+
+	<?php if ($sort_mode): ?>
+	<div class="sort-mode-bar">
+		⇅ <strong>Режим сортировки.</strong> Перетащите строки в нужном порядке, затем нажмите «Сохранить порядок».
+	</div>
+	<?php endif ?>
+
+	<!-- Поиск (скрыт в режиме сортировки) -->
+	<?php if (!$sort_mode): ?>
 	<form class="search-bulk" method="GET">
 		<input type="hidden" name="section" value="<?= h($section) ?>">
 		<input class="search-input" type="text" name="q"
@@ -245,7 +294,15 @@ function sort_arrow(string $col, string $cur_sort, string $cur_dir): string {
 			<a class="btn btn--outline" href="?section=<?= h($section) ?>">Сбросить</a>
 		<?php endif ?>
 	</form>
+	<?php endif /* !sort_mode */ ?>
 
+	<?php if ($sort_mode): ?>
+	<!-- Форма сохранения порядка -->
+	<form method="POST" id="sort-form">
+		<input type="hidden" name="section" value="<?= h($section) ?>">
+		<input type="hidden" name="save_order" value="1">
+		<div id="sort-articles"></div>
+	<?php else: ?>
 	<!-- Bulk-панель (показывается при выборе чекбоксов) -->
 	<form method="POST" id="bulk-form">
 		<input type="hidden" name="section" value="<?= h($section) ?>">
@@ -259,6 +316,8 @@ function sort_arrow(string $col, string $cur_sort, string $cur_dir): string {
 				<button class="btn btn--danger" type="button" onclick="bulkSubmit('delete')">🗑 Удалить</button>
 			</div>
 		</div>
+	</form><!-- /bulk-form -->
+	<?php endif ?>
 
 	<?php if (empty($products)): ?>
 		<div class="empty">
@@ -275,9 +334,13 @@ function sort_arrow(string $col, string $cur_sort, string $cur_dir): string {
 			<table>
 				<thead>
 					<tr>
+						<?php if ($sort_mode): ?>
+						<th style="width:32px;"></th>
+						<?php else: ?>
 						<th class="td-check">
 							<input type="checkbox" id="check-all" title="Выбрать все">
 						</th>
+						<?php endif ?>
 						<th class="td-img"></th>
 						<th><a href="<?= sort_url('name', $sort, $dir) ?>">Название<?= sort_arrow('name', $sort, $dir) ?></a></th>
 						<th><a href="<?= sort_url('article', $sort, $dir) ?>">Артикул<?= sort_arrow('article', $sort, $dir) ?></a></th>
@@ -293,11 +356,15 @@ function sort_arrow(string $col, string $cur_sort, string $cur_dir): string {
 					$hidden = !empty($p['hidden']);
 					$manual = !empty($p['_manual']);
 				?>
-					<tr <?= $hidden ? 'class="is-hidden"' : '' ?>>
-						<!-- Чекбокс -->
+					<tr <?= $hidden ? 'class="is-hidden"' : '' ?> data-article="<?= h($art) ?>">
+						<!-- Handle или чекбокс -->
+						<?php if ($sort_mode): ?>
+						<td class="drag-handle" title="Перетащить">⠿</td>
+						<?php else: ?>
 						<td class="td-check">
 							<input type="checkbox" name="bulk_articles[]" value="<?= h($art) ?>" class="row-check">
 						</td>
+						<?php endif ?>
 
 						<!-- Фото -->
 						<td class="td-img">
@@ -391,7 +458,12 @@ function sort_arrow(string $col, string $cur_sort, string $cur_dir): string {
 		</div>
 	<?php endif ?>
 
-	</form><!-- /bulk-form -->
+	<?php if ($sort_mode): ?>
+		<div style="margin-top:16px;">
+			<button type="submit" form="sort-form" class="btn btn--primary">💾 Сохранить порядок</button>
+		</div>
+	</form><!-- /sort-form -->
+	<?php endif ?>
 </div>
 
 <script>
@@ -433,6 +505,60 @@ function bulkSubmit(action) {
 		document.getElementById('bulk-form').submit();
 	}, { confirmText: labels[action], danger: isDanger });
 }
+
+/* --- Drag-and-drop сортировка --- */
+var SORT_MODE = <?= $sort_mode ? 'true' : 'false' ?>;
+
+if (SORT_MODE) (function() {
+	const tbody  = document.querySelector('tbody');
+	const form   = document.getElementById('sort-form');
+	const holder = document.getElementById('sort-articles');
+	let dragged  = null;
+
+	/* Делаем строки перетаскиваемыми */
+	tbody.querySelectorAll('tr').forEach(tr => { tr.draggable = true; });
+
+	tbody.addEventListener('dragstart', e => {
+		dragged = e.target.closest('tr');
+		dragged.classList.add('is-dragging');
+	});
+
+	tbody.addEventListener('dragend', () => {
+		if (dragged) dragged.classList.remove('is-dragging');
+		tbody.querySelectorAll('tr.drag-over').forEach(r => r.classList.remove('drag-over'));
+		dragged = null;
+	});
+
+	tbody.addEventListener('dragover', e => {
+		e.preventDefault();
+		const target = e.target.closest('tr');
+		if (!target || target === dragged) return;
+		tbody.querySelectorAll('tr.drag-over').forEach(r => r.classList.remove('drag-over'));
+		target.classList.add('drag-over');
+	});
+
+	tbody.addEventListener('drop', e => {
+		e.preventDefault();
+		const target = e.target.closest('tr');
+		if (!target || target === dragged) return;
+		target.classList.remove('drag-over');
+		tbody.insertBefore(dragged, target);
+	});
+
+	/* Перед отправкой формы собираем порядок артикулов */
+	form.addEventListener('submit', () => {
+		holder.innerHTML = '';
+		tbody.querySelectorAll('tr').forEach(tr => {
+			const art = tr.dataset.article;
+			if (!art) return;
+			const inp = document.createElement('input');
+			inp.type  = 'hidden';
+			inp.name  = 'order_articles[]';
+			inp.value = art;
+			holder.appendChild(inp);
+		});
+	});
+})();
 </script>
 
 </body>

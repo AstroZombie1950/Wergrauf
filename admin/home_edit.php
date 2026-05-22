@@ -11,12 +11,12 @@ if (empty($_SESSION['admin_logged_in'])) {
 	exit;
 }
 
-$home_file = DATA_DIR . '/home.json';
-$sections_map = SECTIONS_MAP ?? [];
+$home_file = DATA_DIR . 'home.json';
+$sections_map = array_values(SHEET_MAP);
 
 /* Загружаем все товары для выпадающего списка */
 $all_products = [];
-foreach (array_keys($sections_map) as $section) {
+foreach ($sections_map as $section) {
 	$products = load_products($section);
 	foreach ($products as $p) {
 		if (empty($p['article'])) continue;
@@ -155,11 +155,6 @@ $section_labels = [
 		h1 { font-size: 24px; font-weight: 600; margin: 0 0 24px; }
 		h2 { font-size: 17px; font-weight: 600; margin: 0 0 16px; padding-bottom: 10px; border-bottom: 1px solid #e5e5e5; }
 
-		/* Навигация */
-		.admin-nav { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-		.admin-nav a { font-size: 14px; font-weight: 500; color: #385081; text-decoration: none; }
-		.admin-nav a:hover { text-decoration: underline; }
-
 		/* Карточки блоков */
 		.admin-card { background: #fff; border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
 
@@ -199,15 +194,37 @@ $section_labels = [
 
 		/* Загрузка файла */
 		.file-preview { margin-top: 8px; max-height: 80px; border-radius: 8px; }
+
+		/* --- Навигация --- */
+		.admin-topbar { background: #4a4f59; color: #fff; padding: 0 24px; height: 52px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+		.admin-topbar__brand { font-weight: 700; font-size: 15px; letter-spacing: .04em; }
+		.admin-topbar__brand span { font-weight: 400; opacity: .6; font-size: 12px; margin-left: 8px; }
+		.admin-topbar__right a { color: rgba(255,255,255,.7); text-decoration: none; font-size: 13px; }
+		.admin-topbar__right a:hover { color: #fff; }
+		.admin-nav { background: #fff; border-bottom: 1px solid #e2e4e9; padding: 0 24px; display: flex; gap: 4px; position: sticky; top: 52px; z-index: 99; }
+		.admin-nav__item { display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; font-size: 13px; font-weight: 500; color: #8a8f9a; text-decoration: none; border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; white-space: nowrap; }
+		.admin-nav__item:hover { color: #36393e; }
+		.admin-nav__item--active { color: #385081; border-bottom-color: #385081; }
 	</style>
 </head>
 <body>
-<div class="admin-wrap">
-
-	<div class="admin-nav">
-		<a href="/admin/">← Дашборд</a>
-		<a href="/">Сайт ↗</a>
+<div class="admin-topbar">
+	<div class="admin-topbar__brand">
+		WERGRAUF <span>Панель управления</span>
 	</div>
+	<div class="admin-topbar__right">
+		<a href="/admin/?logout">Выйти</a>
+	</div>
+</div>
+
+<!-- Навигация -->
+<nav class="admin-nav">
+	<a class="admin-nav__item" href="/admin/">🗂 Дашборд</a>
+	<a class="admin-nav__item admin-nav__item--active" href="/admin/home_edit.php">🏠 Главная страница</a>
+	<a class="admin-nav__item" href="/admin/log.php">📋 Лог синхронизаций</a>
+</nav>
+
+<div class="admin-wrap">
 
 	<h1>Редактирование главной страницы</h1>
 

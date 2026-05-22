@@ -56,6 +56,28 @@ function load_products(string $section): array {
 		}
 	}
 
+	// Применяем сохранённый порядок
+	$order = load_order($section);
+	if (!empty($order)) {
+		$indexed = [];
+		foreach ($products as $p) {
+			$indexed[(string)$p['article']] = $p;
+		}
+		$sorted = [];
+		// Сначала товары из order-файла в нужном порядке
+		foreach ($order as $article) {
+			if (isset($indexed[$article])) {
+				$sorted[] = $indexed[$article];
+				unset($indexed[$article]);
+			}
+		}
+		// Новые товары, которых нет в order-файле — в конец
+		foreach ($indexed as $p) {
+			$sorted[] = $p;
+		}
+		$products = $sorted;
+	}
+
 	return $products;
 }
 
@@ -115,6 +137,21 @@ function delete_product_from_json(string $section, string $article): bool {
 	return file_put_contents(
 		$file,
 		json_encode($filtered, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+	) !== false;
+}
+
+// --- Порядок товаров ---
+
+function load_order(string $section): array {
+	$file = DATA_DIR . 'order_' . $section . '.json';
+	return file_exists($file) ? (json_decode(file_get_contents($file), true) ?? []) : [];
+}
+
+function save_order(string $section, array $articles): bool {
+	if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);
+	return file_put_contents(
+		DATA_DIR . 'order_' . $section . '.json',
+		json_encode(array_values($articles), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
 	) !== false;
 }
 
@@ -255,12 +292,12 @@ const SPEC_LABELS = [
 
 // --- Утилиты ---
 
-function h(string $str): string {
-	return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+function h($str): string {
+	return htmlspecialchars((string)$str, ENT_QUOTES, 'UTF-8');
 }
 
-function format_price(int $price): string {
-	return number_format($price, 0, '.', ' ') . ' ₽';
+function format_price($price): string {
+	return number_format((int)$price, 0, '.', ' ') . ' ₽';
 }
 
 function time_ago(int $timestamp): string {

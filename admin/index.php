@@ -117,6 +117,12 @@ if ($is_logged_in) {
 		.topbar__link { color: rgba(255,255,255,.7); text-decoration: none; font-size: 13px; }
 		.topbar__link:hover { color: #fff; }
 
+		/* --- Навигация --- */
+		.admin-nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; gap: 4px; position: sticky; top: 52px; z-index: 99; }
+		.admin-nav__item { display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; font-size: 13px; font-weight: 500; color: var(--muted); text-decoration: none; border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; white-space: nowrap; }
+		.admin-nav__item:hover { color: var(--text); }
+		.admin-nav__item--active { color: var(--accent-h); border-bottom-color: var(--accent-h); }
+
 		/* --- Контент --- */
 		.page { max-width: 1100px; margin: 0 auto; padding: 28px 24px; }
 		.page-title { font-size: 20px; font-weight: 600; margin-bottom: 24px; }
@@ -218,10 +224,16 @@ if ($is_logged_in) {
 		WERGRAUF <span>Панель управления</span>
 	</div>
 	<div class="topbar__right">
-		<a class="topbar__link" href="/admin/log.php">📋 Лог синхронизаций</a>
 		<a class="topbar__link" href="?logout">Выйти</a>
 	</div>
 </div>
+
+<!-- Навигация -->
+<nav class="admin-nav">
+	<a class="admin-nav__item admin-nav__item--active" href="/admin/">🗂 Дашборд</a>
+	<a class="admin-nav__item" href="/admin/home_edit.php">🏠 Главная страница</a>
+	<a class="admin-nav__item" href="/admin/log.php">📋 Лог синхронизаций</a>
+</nav>
 
 <div class="page">
 	<div class="page-title">Дашборд</div>

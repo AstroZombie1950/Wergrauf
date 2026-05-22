@@ -2,6 +2,7 @@
 /* Главная страница WERGRAUF */
 
 /* Загружаем хелперы */
+require_once $_SERVER['DOCUMENT_ROOT'] . '/admin/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/admin/helpers.php';
 
 /* Данные главной из JSON */
@@ -172,10 +173,10 @@ if (!empty($popular_ids)) {
 									<?php foreach ($popular_products as $p):
 										$section  = $p['_section'] ?? 'shower_system';
 										$slug     = $p['slug'] ?? $p['article'] ?? '';
-										$photos   = $p['photos'] ?? [];
-										$photo    = !empty($photos) ? $photos[0] : '';
-										$price    = $p['price'] ?? 0;
-										$old_price = $p['old_price'] ?? 0;
+										/* Фото: сначала image, потом первый из gallery */
+										$photo    = $p['image'] ?? (!empty($p['gallery']) ? $p['gallery'][0] : (!empty($p['photos']) ? $p['photos'][0] : ''));
+										$price    = (int)($p['price'] ?? 0);
+										$old_price = (int)($p['old_price'] ?? 0);
 										$name     = $p['name'] ?? '';
 										$article  = $p['article'] ?? '';
 										$discount = ($old_price > 0 && $price > 0)
@@ -376,15 +377,9 @@ if (!empty($popular_ids)) {
 								</div>
 							</div>
 						</div>
+						<!-- Яндекс-карта -->
 						<div class="image-map">
-							<picture>
-								<source type="image/webp" media="(min-width: 1024px)" srcset="images/maps/pickup-map-desktop1x.webp, images/maps/pickup-map-desktop2x.webp 2x">
-								<source type="image/webp" media="(min-width: 768px)"  srcset="images/maps/pickup-map-tablet1x.webp, images/maps/pickup-map-tablet2x.webp 2x">
-								<source type="image/webp" srcset="images/maps/pickup-map-mobile1x.webp, images/maps/pickup-map-mobile2x.webp 2x">
-								<source media="(min-width: 1024px)" srcset="images/maps/pickup-map-desktop1x.jpeg, images/maps/pickup-map-desktop2x.jpeg 2x">
-								<source media="(min-width: 768px)"  srcset="images/maps/pickup-map-tablet1x.jpeg, images/maps/pickup-map-tablet2x.jpeg 2x">
-								<img class="pickup-map-image" alt="Карта с пунктом самовывоза" src="images/maps/pickup-map-mobile1x.jpeg" width="800" height="400" loading="lazy">
-							</picture>
+							<script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Afc2e623f23fd011579b421fde8a1b71561730592f9ebab57f7fd429163a3bc4f&amp;width=100%25&amp;height=400&amp;lang=ru_RU&amp;scroll=true"></script>
 						</div>
 					</div>
 				</div>
@@ -485,18 +480,18 @@ document.addEventListener('DOMContentLoaded', function () {
 	sliders.forEach(function (slider) {
 		var block = slider.closest('.product-widget__block');
 		new Swiper(slider, {
-			slidesPerView: 'auto',
 			spaceBetween: 12,
-			speed: 900,
+			speed: 600,
+			slidesPerView: 1,
 			navigation: {
 				nextEl: block ? block.querySelector('.js-slider-btn_next') : null,
 				prevEl: block ? block.querySelector('.js-slider-btn_prev') : null,
 			},
 			breakpoints: {
-				0:    { slidesPerView: 'auto', spaceBetween: 12 },
-				768:  { slidesPerView: 'auto', spaceBetween: 20 },
-				1024: { slidesPerView: 4,      spaceBetween: 20 },
-				1440: { slidesPerView: 6,      spaceBetween: 24 },
+				480:  { slidesPerView: 2, spaceBetween: 12 },
+				768:  { slidesPerView: 3, spaceBetween: 16 },
+				1024: { slidesPerView: 4, spaceBetween: 20 },
+				1280: { slidesPerView: 5, spaceBetween: 20 },
 			}
 		});
 	});
