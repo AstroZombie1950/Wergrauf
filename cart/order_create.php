@@ -235,7 +235,6 @@ function mail_customer(array $order): void {
 }
 
 function mail_shop(array $order): void {
-	if (MAIL_TO === 'WergraufRu@yandex.ru') return;
 
 	$c       = $order['customer'];
 	$subject = "Новый заказ {$order['id']} — " . SITE_NAME;

@@ -13,6 +13,9 @@ if ($order_id) {
 	}
 }
 
+// Флаг редиректа после Checkout
+$checkout_paid = isset($_GET['paid']) && $_GET['paid'] === '1';
+
 function oh(string $s): string {
 	return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
 }
@@ -74,6 +77,11 @@ $status = $order ? ($status_labels[$order['status']] ?? $status_labels['new']) :
 	.total-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; color: #6b6b6b; }
 	.total-row--main { font-size: 20px; font-weight: 700; color: #36393e; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f0f0f0; }
 
+	/* Кнопки оплаты */
+	.pay-buttons { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+	.pay-btn--sbp { background: #36393e; }
+	.pay-btn--checkout { background: #005bff; }
+	.pay-btn--checkout:hover { background: #0047cc; }
 	/* Кнопка оплаты */
 	.pay-btn {
 		display: block; width: 100%; height: 54px; background: #36393e; color: #fff;
@@ -83,8 +91,15 @@ $status = $order ? ($status_labels[$order['status']] ?? $status_labels['new']) :
 	}
 	.pay-btn:hover { background: #1f2226; }
 	.pay-btn:disabled { opacity: .5; cursor: not-allowed; }
-	.pay-notice { font-size: 12px; color: #8a8f9a; text-align: center; line-height: 1.5; }
-	.pay-notice a { color: #385081; }
+	/* Строка доставки */
+	.delivery-notice { display: flex; align-items: center; gap: 10px; margin-top: 14px;
+		padding: 12px 16px; background: #f7f8fa; border-radius: 10px;
+		text-decoration: none; color: #36393e; transition: background .15s; }
+	.delivery-notice:hover { background: #eef0f4; }
+	.delivery-notice__icon { font-size: 18px; flex-shrink: 0; }
+	.delivery-notice__text { font-size: 14px; font-weight: 500; flex: 1; }
+	.delivery-notice__arrow { font-size: 16px; color: #8a8f9a; flex-shrink: 0; transition: transform .15s; }
+	.delivery-notice:hover .delivery-notice__arrow { transform: translateX(3px); }
 
 	/* QR-блок */
 	.qr-wrap { display: none; text-align: center; }
@@ -160,10 +175,15 @@ $status = $order ? ($status_labels[$order['status']] ?? $status_labels['new']) :
 	<div class="order-card" id="payment-card">
 		<div class="order-card__title">Оплата</div>
 
-		<!-- Кнопка запуска -->
-		<button class="pay-btn" id="pay-start-btn" onclick="startPayment()">
-			Оплатить через СБП
-		</button>
+		<!-- Кнопки оплаты -->
+		<div class="pay-buttons">
+			<button class="pay-btn pay-btn--sbp" id="pay-sbp-btn" onclick="startSbpPayment()">
+				Оплатить через СБП
+			</button>
+			<button class="pay-btn pay-btn--checkout" id="pay-checkout-btn" onclick="startCheckoutPayment()">
+				💳 Оплатить картой / Ozon Pay
+			</button>
+		</div>
 
 		<!-- QR-блок (скрыт до нажатия) -->
 		<div class="qr-wrap" id="qr-wrap">
@@ -180,9 +200,11 @@ $status = $order ? ($status_labels[$order['status']] ?? $status_labels['new']) :
 			</div>
 		</div>
 
-		<div class="pay-notice" style="margin-top:14px">
-			Информация о доставке: <a href="/delivery/">wergrauf.ru/delivery</a>
-		</div>
+		<a class="delivery-notice" href="/delivery/">
+			<span class="delivery-notice__icon">🚚</span>
+			<span class="delivery-notice__text">Информация о доставке</span>
+			<span class="delivery-notice__arrow">→</span>
+		</a>
 	</div>
 
 	<?php elseif ($order['status'] === 'new' && PAYMENT_MODE === 'pending'): ?>
@@ -195,9 +217,11 @@ $status = $order ? ($status_labels[$order['status']] ?? $status_labels['new']) :
 		<div style="background:#f4f5f7;border-radius:8px;padding:14px;font-size:13px;color:#6b6b6b">
 			📞 Ожидайте звонка менеджера
 		</div>
-		<div class="pay-notice" style="margin-top:12px">
-			Информация о доставке: <a href="/delivery/">wergrauf.ru/delivery</a>
-		</div>
+		<a class="delivery-notice" href="/delivery/">
+			<span class="delivery-notice__icon">🚚</span>
+			<span class="delivery-notice__text">Информация о доставке</span>
+			<span class="delivery-notice__arrow">→</span>
+		</a>
 	</div>
 
 	<?php endif ?>
@@ -298,16 +322,19 @@ $status = $order ? ($status_labels[$order['status']] ?? $status_labels['new']) :
 (function() {
 	'use strict';
 
-	const ORDER_ID   = <?= json_encode($order_id) ?>;
+	const ORDER_ID      = <?= json_encode($order_id) ?>;
+	const CHECKOUT_PAID = <?= $checkout_paid ? 'true' : 'false' ?>;
 	const TTL        = <?= OZON_PAYMENT_TTL ?>;	// секунды
 	let pollTimer    = null;
 	let countTimer   = null;
 	let secondsLeft  = TTL;
 
 	/* --- Запуск оплаты --- */
-	window.startPayment = function() {
-		const btn = document.getElementById('pay-start-btn');
-		btn.disabled    = true;
+	window.startSbpPayment = function() {
+		const btn = document.getElementById('pay-sbp-btn');
+		const btn2 = document.getElementById('pay-checkout-btn');
+		btn.disabled  = true;
+		btn2.disabled = true;
 		btn.textContent = 'Создаём ссылку…';
 
 		fetch('/payment/create.php', {
@@ -326,7 +353,8 @@ $status = $order ? ($status_labels[$order['status']] ?? $status_labels['new']) :
 			showQR(data.payload);
 		})
 		.catch(err => {
-			btn.disabled    = false;
+			btn.disabled  = false;
+			btn2.disabled = false;
 			btn.textContent = 'Оплатить через СБП';
 			console.error('Payment fetch error:', err);
 			alert('Ошибка соединения: ' + err.message + '. Проверьте интернет и попробуйте ещё раз.');
@@ -336,7 +364,8 @@ $status = $order ? ($status_labels[$order['status']] ?? $status_labels['new']) :
 	/* --- Показываем QR --- */
 	function showQR(payload) {
 		// Скрываем кнопку
-		document.getElementById('pay-start-btn').style.display = 'none';
+		document.getElementById('pay-sbp-btn').style.display = 'none';
+		document.getElementById('pay-checkout-btn').style.display = 'none';
 
 		// Рисуем QR через qrcodejs (new QRCode)
 		const container = document.getElementById('qr-canvas');
@@ -373,6 +402,39 @@ $status = $order ? ($status_labels[$order['status']] ?? $status_labels['new']) :
 		pollTimer = setInterval(pollStatus, 3000);
 	}
 
+	/* --- Ozon Pay Checkout --- */
+	window.startCheckoutPayment = function() {
+		const btn  = document.getElementById('pay-checkout-btn');
+		const btn2 = document.getElementById('pay-sbp-btn');
+		btn.disabled  = true;
+		btn2.disabled = true;
+		btn.textContent = 'Переходим к оплате…';
+
+		fetch('/payment/create_order.php', {
+			method:  'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body:    JSON.stringify({ order_id: ORDER_ID }),
+		})
+		.then(r => r.json())
+		.then(data => {
+			if (!data.ok) {
+				btn.disabled  = false;
+				btn2.disabled = false;
+				btn.textContent = '💳 Оплатить картой / Ozon Pay';
+				alert(data.error || 'Ошибка. Попробуйте ещё раз.');
+				return;
+			}
+			// Редиректим на форму Ozon Pay
+			window.location.href = data.pay_link;
+		})
+		.catch(err => {
+			btn.disabled  = false;
+			btn2.disabled = false;
+			btn.textContent = '💳 Оплатить картой / Ozon Pay';
+			alert('Ошибка соединения: ' + err.message);
+		});
+	};
+
 	/* --- Поллинг --- */
 	function pollStatus() {
 		fetch('/payment/status.php?order_id=' + encodeURIComponent(ORDER_ID))
@@ -386,6 +448,24 @@ $status = $order ? ($status_labels[$order['status']] ?? $status_labels['new']) :
 			}
 		})
 		.catch(() => {}); // тихо игнорируем сетевые ошибки при поллинге
+	}
+
+	/* --- Проверка статуса после Checkout-редиректа --- */
+	if (CHECKOUT_PAID) {
+		checkOrderStatus();
+	}
+
+	function checkOrderStatus() {
+		fetch('/payment/check_order.php?order_id=' + encodeURIComponent(ORDER_ID))
+		.then(r => r.json())
+		.then(data => {
+			if (data.status === 'paid') {
+				window.location.href = '/order/?id=' + ORDER_ID;
+			} else {
+				setTimeout(checkOrderStatus, 3000);
+			}
+		})
+		.catch(() => setTimeout(checkOrderStatus, 5000));
 	}
 
 	/* --- Таймер --- */
