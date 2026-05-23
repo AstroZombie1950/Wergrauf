@@ -22,9 +22,9 @@ function ofmt(int $n): string {
 }
 
 $status_labels = [
-	'new'       => ['label' => 'Ожидает оплаты',    'color' => '#e65100', 'bg' => '#fff3e0'],
-	'paid'      => ['label' => 'Оплачен',            'color' => '#2e7d32', 'bg' => '#e8f5e9'],
-	'cancelled' => ['label' => 'Отменён',            'color' => '#c62828', 'bg' => '#fce4ec'],
+	'new'       => ['label' => 'Ожидает оплаты', 'color' => '#e65100', 'bg' => '#fff3e0'],
+	'paid'      => ['label' => 'Оплачен',         'color' => '#2e7d32', 'bg' => '#e8f5e9'],
+	'cancelled' => ['label' => 'Отменён',          'color' => '#c62828', 'bg' => '#fce4ec'],
 ];
 $status = $order ? ($status_labels[$order['status']] ?? $status_labels['new']) : null;
 ?>
@@ -74,11 +74,38 @@ $status = $order ? ($status_labels[$order['status']] ?? $status_labels['new']) :
 	.total-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; color: #6b6b6b; }
 	.total-row--main { font-size: 20px; font-weight: 700; color: #36393e; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f0f0f0; }
 
-	/* Оплата */
-	.pay-btn { display: block; width: 100%; height: 54px; background: #36393e; color: #fff; border: none; border-radius: 10px; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer; text-align: center; line-height: 54px; text-decoration: none; margin-bottom: 12px; transition: background .2s; }
+	/* Кнопка оплаты */
+	.pay-btn {
+		display: block; width: 100%; height: 54px; background: #36393e; color: #fff;
+		border: none; border-radius: 10px; font-family: inherit; font-size: 16px;
+		font-weight: 700; cursor: pointer; text-align: center; line-height: 54px;
+		text-decoration: none; margin-bottom: 12px; transition: background .2s;
+	}
 	.pay-btn:hover { background: #1f2226; }
+	.pay-btn:disabled { opacity: .5; cursor: not-allowed; }
 	.pay-notice { font-size: 12px; color: #8a8f9a; text-align: center; line-height: 1.5; }
 	.pay-notice a { color: #385081; }
+
+	/* QR-блок */
+	.qr-wrap { display: none; text-align: center; }
+	.qr-wrap.visible { display: block; }
+	.qr-canvas { width: 220px; height: 220px; border-radius: 12px; border: 1px solid #f0f0f0; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+	.qr-canvas img, .qr-canvas canvas { display: block; }
+	.qr-hint { font-size: 13px; color: #6b6b6b; margin-bottom: 12px; line-height: 1.5; }
+	.qr-link { display: inline-block; color: #385081; font-size: 13px; font-weight: 600; text-decoration: none; }
+	.qr-link:hover { text-decoration: underline; }
+	.qr-timer { font-size: 12px; color: #8a8f9a; margin-top: 10px; }
+	.qr-waiting { display: flex; align-items: center; gap: 8px; justify-content: center;
+		font-size: 13px; color: #8a8f9a; margin-top: 14px; }
+	.qr-spinner { width: 16px; height: 16px; border: 2px solid #e2e4e9;
+		border-top-color: #4a4f59; border-radius: 50%; animation: spin .8s linear infinite; }
+	@keyframes spin { to { transform: rotate(360deg); } }
+
+	/* Успешная оплата */
+	.pay-success { text-align: center; padding: 16px 0 8px; }
+	.pay-success__icon { font-size: 48px; margin-bottom: 12px; }
+	.pay-success__title { font-size: 18px; font-weight: 700; color: #2e7d32; margin-bottom: 8px; }
+	.pay-success__text { font-size: 14px; color: #6b6b6b; line-height: 1.6; }
 
 	/* Не найден */
 	.not-found { text-align: center; padding: 64px 20px; }
@@ -113,25 +140,66 @@ $status = $order ? ($status_labels[$order['status']] ?? $status_labels['new']) :
 		</span>
 	</div>
 
-	<!-- Оплата -->
-	<?php if ($order['status'] === 'new'): ?>
+	<!-- Блок оплаты -->
+	<?php if ($order['status'] === 'paid'): ?>
+
 	<div class="order-card">
 		<div class="order-card__title">Оплата</div>
-		<?php if (PAYMENT_MODE === 'pending'): ?>
-			<p style="font-size:14px;color:#6b6b6b;margin:0 0 16px;line-height:1.6">
-				Оплата будет доступна в ближайшее время. Пока что наш менеджер свяжется с вами для подтверждения заказа и уточнения способа оплаты.
-			</p>
-			<div style="background:#f4f5f7;border-radius:8px;padding:14px;font-size:13px;color:#6b6b6b">
-				📞 Ожидайте звонка менеджера
+		<div class="pay-success">
+			<div class="pay-success__icon">✅</div>
+			<div class="pay-success__title">Оплата прошла успешно</div>
+			<div class="pay-success__text">
+				Ваш заказ принят в работу. Менеджер свяжется с вами для уточнения деталей доставки.<br>
+				Ожидайте звонка или сообщения.
 			</div>
-		<?php else: ?>
-			<!-- Здесь будет кнопка оплаты после подключения эквайринга -->
-			<a class="pay-btn" href="#payment">Перейти к оплате</a>
-		<?php endif ?>
+		</div>
+	</div>
+
+	<?php elseif ($order['status'] === 'new' && PAYMENT_MODE === 'ozon_sbp'): ?>
+
+	<div class="order-card" id="payment-card">
+		<div class="order-card__title">Оплата</div>
+
+		<!-- Кнопка запуска -->
+		<button class="pay-btn" id="pay-start-btn" onclick="startPayment()">
+			Оплатить через СБП
+		</button>
+
+		<!-- QR-блок (скрыт до нажатия) -->
+		<div class="qr-wrap" id="qr-wrap">
+			<div id="qr-canvas" class="qr-canvas"></div>
+			<div class="qr-hint">
+				Отсканируйте QR-код камерой смартфона или через приложение банка.<br>
+				На мобильном — нажмите кнопку ниже.
+			</div>
+			<a href="#" id="qr-mobile-link" class="qr-link">📱 Открыть в банковском приложении</a>
+			<div class="qr-timer" id="qr-timer"></div>
+			<div class="qr-waiting">
+				<div class="qr-spinner"></div>
+				<span>Ожидаем подтверждения оплаты…</span>
+			</div>
+		</div>
+
+		<div class="pay-notice" style="margin-top:14px">
+			Информация о доставке: <a href="/delivery/">wergrauf.ru/delivery</a>
+		</div>
+	</div>
+
+	<?php elseif ($order['status'] === 'new' && PAYMENT_MODE === 'pending'): ?>
+
+	<div class="order-card">
+		<div class="order-card__title">Оплата</div>
+		<p style="font-size:14px;color:#6b6b6b;margin:0 0 16px;line-height:1.6">
+			Оплата будет доступна в ближайшее время. Наш менеджер свяжется с вами для подтверждения заказа и уточнения способа оплаты.
+		</p>
+		<div style="background:#f4f5f7;border-radius:8px;padding:14px;font-size:13px;color:#6b6b6b">
+			📞 Ожидайте звонка менеджера
+		</div>
 		<div class="pay-notice" style="margin-top:12px">
 			Информация о доставке: <a href="/delivery/">wergrauf.ru/delivery</a>
 		</div>
 	</div>
+
 	<?php endif ?>
 
 	<!-- Покупатель -->
@@ -222,5 +290,115 @@ $status = $order ? ($status_labels[$order['status']] ?? $status_labels['new']) :
 </div>
 
 <?php include($_SERVER['DOCUMENT_ROOT'] . '/source_include/foot.html'); ?>
+
+<?php if (isset($order) && $order['status'] === 'new' && PAYMENT_MODE === 'ozon_sbp'): ?>
+<!-- QR-библиотека (только на странице с оплатой) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(function() {
+	'use strict';
+
+	const ORDER_ID   = <?= json_encode($order_id) ?>;
+	const TTL        = <?= OZON_PAYMENT_TTL ?>;	// секунды
+	let pollTimer    = null;
+	let countTimer   = null;
+	let secondsLeft  = TTL;
+
+	/* --- Запуск оплаты --- */
+	window.startPayment = function() {
+		const btn = document.getElementById('pay-start-btn');
+		btn.disabled    = true;
+		btn.textContent = 'Создаём ссылку…';
+
+		fetch('/payment/create.php', {
+			method:  'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body:    JSON.stringify({ order_id: ORDER_ID }),
+		})
+		.then(r => r.json())
+		.then(data => {
+			if (!data.ok) {
+				btn.disabled    = false;
+				btn.textContent = 'Оплатить через СБП';
+				alert(data.error || 'Ошибка создания платежа. Попробуйте ещё раз.');
+				return;
+			}
+			showQR(data.payload);
+		})
+		.catch(err => {
+			btn.disabled    = false;
+			btn.textContent = 'Оплатить через СБП';
+			console.error('Payment fetch error:', err);
+			alert('Ошибка соединения: ' + err.message + '. Проверьте интернет и попробуйте ещё раз.');
+		});
+	};
+
+	/* --- Показываем QR --- */
+	function showQR(payload) {
+		// Скрываем кнопку
+		document.getElementById('pay-start-btn').style.display = 'none';
+
+		// Рисуем QR через qrcodejs (new QRCode)
+		const container = document.getElementById('qr-canvas');
+		container.innerHTML = '';
+		new QRCode(container, {
+			text:          payload,
+			width:         220,
+			height:        220,
+			colorDark:     '#36393e',
+			colorLight:    '#ffffff',
+			correctLevel:  QRCode.CorrectLevel.M,
+		});
+
+		// Ссылка для мобильных (payload — это ссылка вида https://qr.nspk.ru/...)
+		const mobileLink = document.getElementById('qr-mobile-link');
+		mobileLink.href = payload;
+
+		// Показываем блок
+		document.getElementById('qr-wrap').classList.add('visible');
+
+		// Таймер обратного отсчёта
+		updateTimer();
+		countTimer = setInterval(function() {
+			secondsLeft--;
+			updateTimer();
+			if (secondsLeft <= 0) {
+				clearInterval(countTimer);
+				clearInterval(pollTimer);
+				document.getElementById('qr-timer').textContent = 'Время оплаты истекло. Обновите страницу для новой попытки.';
+			}
+		}, 1000);
+
+		// Поллинг статуса каждые 3 сек
+		pollTimer = setInterval(pollStatus, 3000);
+	}
+
+	/* --- Поллинг --- */
+	function pollStatus() {
+		fetch('/payment/status.php?order_id=' + encodeURIComponent(ORDER_ID))
+		.then(r => r.json())
+		.then(data => {
+			if (data.status === 'paid') {
+				clearInterval(pollTimer);
+				clearInterval(countTimer);
+				// Перезагружаем страницу — PHP покажет блок успешной оплаты
+				window.location.reload();
+			}
+		})
+		.catch(() => {}); // тихо игнорируем сетевые ошибки при поллинге
+	}
+
+	/* --- Таймер --- */
+	function updateTimer() {
+		const m = Math.floor(secondsLeft / 60);
+		const s = secondsLeft % 60;
+		const el = document.getElementById('qr-timer');
+		if (el && secondsLeft > 0) {
+			el.textContent = 'Ссылка действительна ещё ' + m + ':' + String(s).padStart(2, '0');
+		}
+	}
+})();
+</script>
+<?php endif ?>
 </body>
 </html>

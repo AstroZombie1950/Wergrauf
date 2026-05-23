@@ -223,8 +223,8 @@ if (!empty($popular_ids)) {
 													<div class="category-products__item-buy">
 														<button
 															type="button"
-															class="btn-add-to-cart"
-															onclick="cartAdd('<?= h($article) ?>', '<?= h(addslashes($name)) ?>', <?= (int)$price ?>, '<?= h($photo) ?>', '<?= h($section) ?>', '<?= h($slug) ?>')"
+															class="btn-add-to-cart js-add-to-cart"
+															data-product='<?= htmlspecialchars(json_encode(["article"=>$article,"name"=>$name,"price"=>(int)$price,"image"=>$photo,"section_url"=>"/".$section."/","slug"=>$slug],JSON_UNESCAPED_UNICODE),ENT_QUOTES) ?>'
 														>В корзину</button>
 													</div>
 												</div>
@@ -474,6 +474,14 @@ if (!empty($popular_ids)) {
 </div>
 
 <script>
+/* Кнопки «В корзину» на главной */
+document.addEventListener('click', function(e) {
+	var btn = e.target.closest('.js-add-to-cart');
+	if (!btn) return;
+	var product = JSON.parse(btn.dataset.product);
+	cartAdd(product);
+});
+
 /* Инициализация слайдера популярных товаров */
 document.addEventListener('DOMContentLoaded', function () {
 	var sliders = document.querySelectorAll('.js-slider');
