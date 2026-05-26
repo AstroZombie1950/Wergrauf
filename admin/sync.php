@@ -56,7 +56,9 @@ function sync_sheet(string $sheet_name, string $section): array {
 			$skipped++;
 			continue;
 		}
-		if ($item['price'] === 0 || $item['stock'] === 0) {
+		// Пропускаем только нулевую цену — нет смысла в товаре без цены
+		// Нулевой остаток допустим: страница живёт для SEO, кнопка покупки скрыта
+		if ($item['price'] === 0) {
 			$skipped++;
 			continue;
 		}

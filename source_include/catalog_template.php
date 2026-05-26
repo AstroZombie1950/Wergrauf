@@ -5,7 +5,9 @@
 require_once $_SERVER['DOCUMENT_ROOT'] . '/admin/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/admin/helpers.php';
 $products = load_products($section);
-$count    = count($products);
+/* Для каталога показываем только товары в наличии и не скрытые */
+$catalog_products = array_values(array_filter($products, fn($p) => (int)($p['stock'] ?? 0) > 0 && empty($p['hidden'])));
+$count    = count($catalog_products);
 
 function ct_h(string $s): string {
 	return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
@@ -238,7 +240,7 @@ function ct_h(string $s): string {
 	<?php include($_SERVER['DOCUMENT_ROOT'].'/source_include/foot.html'); ?>
 
 	<script>
-	const PRODUCTS_DATA   = <?= json_encode($products, JSON_UNESCAPED_UNICODE) ?>;
+	const PRODUCTS_DATA   = <?= json_encode($catalog_products, JSON_UNESCAPED_UNICODE) ?>;
 	const SECTION_URL     = '<?= $section_url ?>';
 	const ACTIVE_FILTERS  = <?= json_encode($filters) ?>;
 	</script>

@@ -249,6 +249,7 @@ $gallery = array_unique($gallery);
 	.product-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0 24px; }
 	.product-btn { height: 52px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; background: #2b2f33; color: #fff; border: none; transition: background 0.2s; font-family: inherit; }
 	.product-btn:hover { background: #1f2226; }
+	.product-out-of-stock { height: 52px; border-radius: 8px; font-size: 14px; font-weight: 600; background: #f0f0f0; color: #8a8f9a; display: flex; align-items: center; justify-content: center; grid-column: 1 / -1; }
 
 	.product-features { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
 	.feature-card { background: #f7f7f7; border-radius: 10px; padding: 14px; }
@@ -447,6 +448,7 @@ $gallery = array_unique($gallery);
 						'discount_percent' => $product['discount_percent'] ?? '',
 					], JSON_UNESCAPED_UNICODE);
 					?>
+					<?php if ((int)($product['stock'] ?? 0) > 0): ?>
 					<div class="product-actions">
 						<button class="product-btn" type="button"
 							onclick='cartAdd(<?= pt_h($_cart_product) ?>)'>
@@ -457,6 +459,11 @@ $gallery = array_unique($gallery);
 							Купить в один клик
 						</button>
 					</div>
+					<?php else: ?>
+					<div class="product-actions">
+						<div class="product-out-of-stock">Нет в наличии</div>
+					</div>
+					<?php endif ?>
 
 					<!-- Фичи -->
 					<div class="product-features">
@@ -470,7 +477,11 @@ $gallery = array_unique($gallery);
 
 					<!-- Траст -->
 					<div class="product-trust">
+						<?php if ((int)($product['stock'] ?? 0) > 0): ?>
 						<div class="trust-item"><strong>В наличии</strong><span><?= (int)$product['stock'] ?> шт.</span></div>
+						<?php else: ?>
+						<div class="trust-item"><strong>Нет в наличии</strong><span>Уточните у менеджера</span></div>
+						<?php endif ?>
 						<div class="trust-item"><strong>Быстрая доставка</strong><span>По всей России</span></div>
 						<div class="trust-item"><strong>Официальная гарантия</strong><span>от производителя</span></div>
 					</div>

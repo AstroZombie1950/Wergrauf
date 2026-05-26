@@ -273,7 +273,7 @@ if ($is_logged_in) {
 	<div class="sync-all-bar">
 		<div class="sync-all-bar__text">
 			<strong>Синхронизация с Google Sheets</strong>
-			<p>Загрузит все разделы из таблицы. Товары без slug, с ценой 0 или остатком 0 — пропускаются.</p>
+			<p>Загрузит все разделы из таблицы. Товары без slug или с ценой 0 — пропускаются.</p>
 		</div>
 		<form method="POST">
 			<button class="btn btn--primary" type="submit" name="sync_all" value="1">
