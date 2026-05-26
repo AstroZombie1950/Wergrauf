@@ -70,7 +70,7 @@
 
                     <div class="contact-item">
                         <h3>Max</h3>
-                        <a class="contact-link" href="https://max.ru/join/eKhzlC2n2crARo1pypZTj7DxbLPhj2Ck3MGMbz0_2rQ" target="_blank" rel="noopener noreferrer">
+                        <a class="contact-link" href="https://max.ru/u/f9LHodD0cOJ3MU2MSTmMb1zT5rdSq-dmOvS694Xd4SZfZpGw54dwQ4TEpK4" target="_blank" rel="noopener noreferrer">
                             Написать в Max
                         </a>
                     </div>

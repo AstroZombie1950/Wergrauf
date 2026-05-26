@@ -30,13 +30,7 @@
                     Вы можете самостоятельно забрать заказ в пункте самовывоза в Москве в удобное для вас время.
                 </p>
                 <div class="image-map">
-                    <picture>
-                        <source type="image/webp" media="(min-width: 1024px)" srcset="https://wergrauf.ru/images/maps/pickup-map-desktop1x.webp, https://wergrauf.ru/images/maps/pickup-map-desktop2x.webp 2x">
-                        <source type="image/webp" media="(min-width: 768px)" srcset="https://wergrauf.ru/images/maps/pickup-map-tablet1x.webp, https://wergrauf.ru/images/maps/pickup-map-tablet2x.webp 2x">
-                        <source type="image/webp" srcset="https://wergrauf.ru/images/maps/pickup-map-mobile1x.webp, https://wergrauf.ru/images/maps/pickup-map-mobile2x.webp 2x">
-                        <source media="(min-width: 1024px)" srcset="https://wergrauf.ru/images/maps/pickup-map-desktop1x.jpeg, https://wergrauf.ru/images/maps/pickup-map-desktop2x.jpeg 2x">
-                        <source media="(min-width: 768px)" srcset="https://wergrauf.ru/images/maps/pickup-map-tablet1x.jpeg, https://wergrauf.ru/images/maps/pickup-map-tablet2x.jpeg 2x">
-                        <img class="pickup-map-image" alt="Карта с пунктом самовывоза" src="https://wergrauf.ru/images/maps/pickup-map-mobile1x.jpeg"></picture>
+                    <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Afc2e623f23fd011579b421fde8a1b71561730592f9ebab57f7fd429163a3bc4f&amp;width=100%25&amp;height=400&amp;lang=ru_RU&amp;scroll=true"></script>
                 </div>
             </section>
 
