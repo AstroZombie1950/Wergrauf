@@ -10,7 +10,6 @@
 	<link rel="stylesheet" href="/source_css/wg.css" media="all">
 	<style>
 	*, *::before, *::after { box-sizing: border-box; }
-	body { margin: 0; font-family: "Roboto", Arial, sans-serif; color: #36393e; }
 
 	.cart-page { max-width: 1100px; margin: 0 auto; padding: 32px 20px 60px; }
 	.cart-page__title { font-size: 28px; font-weight: 700; margin: 0 0 8px; }

@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="/source_css/wg.css" media="all">
 	<style>
 	*, *::before, *::after { box-sizing: border-box; }
-	body { margin: 0; font-family: "Roboto", Arial, sans-serif; color: #36393e; background: #f7f8fa; }
+	body { margin: 0; color: #36393e; background: #f7f8fa; }
 	.error-page { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; text-align: center; }
 	.error-code { font-size: 120px; font-weight: 700; color: #e8eaed; line-height: 1; margin-bottom: 8px; }
 	.error-title { font-size: 26px; font-weight: 600; color: #36393e; margin-bottom: 12px; }

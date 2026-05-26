@@ -235,9 +235,9 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 
 	.product-thumbs {
 		display: flex;
+		flex-wrap: wrap;
 		gap: 8px;
 		margin-top: 12px;
-		overflow-x: auto;
 	}
 
 	.product-thumb {
@@ -831,8 +831,6 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 
 	<?php include($_SERVER['DOCUMENT_ROOT'].'/source_include/foot.html'); ?>
 
-	<script src="/source_js/cart.js"></script>
-	<script src="/source_js/main.js" defer></script>
 	<script>
 	/* --- Галерея --- */
 	function switchImage(btn, src) {

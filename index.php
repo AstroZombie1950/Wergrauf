@@ -57,9 +57,6 @@ if (!empty($popular_ids)) {
 	<meta property="og:url" content="https://wergrauf.ru">
 	<meta property="og:image" content="https://wergrauf.ru/images/logo_img.png">
 	<link rel="icon" href="https://wergrauf.ru/favicon.ico" type="image/x-icon">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap">
 	<link rel="stylesheet" href="/source_css/wg.css">
 	<link rel="stylesheet" href="/source_css/home.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">

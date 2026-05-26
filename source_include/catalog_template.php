@@ -24,8 +24,8 @@ function ct_h(string $s): string {
 	<meta property="og:url" content="https://wergrauf.ru<?= $section_url ?>">
 	<meta property="og:image" content="https://wergrauf.ru/images/logo_img.png">
 	<link rel="canonical" href="https://wergrauf.ru<?= $section_url ?>">
-	<link rel="icon" href="https://wergrauf.ru/favicon.ico" type="image/x-icon">
-	<link rel="stylesheet" type="text/css" href="https://wergrauf.ru/source_css/wg.css" media="all">
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="/source_css/wg.css" media="all">
 	<script type="application/ld+json">
 	{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
 		{"@type":"ListItem","position":1,"name":"Главная","item":"https://wergrauf.ru/"},
@@ -33,18 +33,18 @@ function ct_h(string $s): string {
 	]}
 	</script>
 	<style>
-	.catalog { padding: 10px 40px 30px 50px; color: #4a4f59e6; }
+	.catalog { max-width: 1280px; margin: 0 auto; padding: 10px 24px 30px; color: #4a4f59e6; }
 	.catalog a { color: inherit; text-decoration: none; }
 	.catalog-title { font-size: 32px; font-weight: 600; color: #36393e; margin: 5px 0 8px; }
 	.breadcrumbs { font-size: 14px; }
 	.breadcrumbs span { margin: 0 6px; }
-	.catalog-meta { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+	.catalog-meta { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
 	.catalog-count { background: #f3f4f6; padding: 8px 14px; border-radius: 8px; font-size: 14px; }
+	.catalog-sort { display: flex; gap: 8px; }
 	.catalog-sort button { background: none; border: none; font-size: 14px; cursor: pointer; margin-left: 16px; color: #4a4f59e6; }
 	.catalog-sort button:hover { text-decoration: underline; }
-	@media (min-width: 769px) { .catalog { position: relative; } .catalog-sort { position: absolute; top: 10px; right: 55px; } }
-	@media (max-width: 768px) { .catalog-sort { position: static; margin-top: 5px; } }
 	.catalog-layout { display: grid; grid-template-columns: 280px 1fr; gap: 32px; align-items: start; }
+	.catalog-products { width: 100%; }
 	.catalog-filters { background: #fff; border-radius: 16px; }
 	.filter { border-bottom: 1px solid #e6e7eb; padding: 16px 0; }
 	.filter-title { width: 100%; background: none; border: none; text-align: left; font-size: 16px; font-weight: 500; color: #36393e; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
@@ -61,7 +61,7 @@ function ct_h(string $s): string {
 	.price-slider::-webkit-slider-thumb { -webkit-appearance: none; pointer-events: all; width: 16px; height: 16px; background: #36393e; box-shadow: 0 1px 4px rgba(0,0,0,.25); border-radius: 50%; cursor: pointer; }
 	.price-slider::-moz-range-thumb { pointer-events: all; width: 16px; height: 16px; background: #36393e; border-radius: 50%; cursor: pointer; }
 	.price-values { display: flex; justify-content: space-between; margin-top: 12px; font-size: 13px; }
-	.catalog-products { width: 100%; margin-top: -85px; }
+	.catalog-products { width: 100%; }
 	@media (max-width: 768px) { .catalog-products { margin-top: 0; } }
 	.products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 	.product-card { background: #fff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; height: 100%; position: relative; transition: box-shadow 0.2s; }
@@ -89,7 +89,7 @@ function ct_h(string $s): string {
 	.filters-mobile-header { display: none; }
 	@media (max-width: 1200px) { .products-grid { grid-template-columns: repeat(2, 1fr); } }
 	@media (max-width: 768px) {
-		.catalog { padding: 0 30px 30px; margin-top: -40px; }
+		.catalog { padding: 0 16px 30px; margin-top: 0; }
 		.catalog-layout { grid-template-columns: 1fr; }
 		.catalog-filters { display: none; }
 		.products-grid { grid-template-columns: 1fr; }
@@ -242,7 +242,7 @@ function ct_h(string $s): string {
 	const SECTION_URL     = '<?= $section_url ?>';
 	const ACTIVE_FILTERS  = <?= json_encode($filters) ?>;
 	</script>
-	<script src="/source_js/cart.js"></script>
+
 	<script src="/source_js/catalog.js"></script>
 </div>
 </body>

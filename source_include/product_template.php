@@ -185,7 +185,6 @@ $gallery = array_unique($gallery);
 	</script>
 	<style>
 	*, *::before, *::after { box-sizing: border-box; }
-	body { margin: 0; font-family: "Roboto", "Arial", sans-serif; }
 
 	.product-hero { padding: 32px 0; }
 	.product-hero__wrapper { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
@@ -197,8 +196,8 @@ $gallery = array_unique($gallery);
 	}
 
 	.product-card { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
-	.product-card--media { grid-area: media; padding: 16px; }
-	.product-card--info  { grid-area: info; }
+	.product-card--media { grid-area: media; padding: 16px; min-width: 0; max-width: 100%; }
+	.product-card--info  { grid-area: info; min-width: 0; }
 
 	.product-image { position: relative; aspect-ratio: 1; overflow: hidden; border-radius: 12px; }
 	.product-image img { width: 100%; height: 100%; object-fit: cover; }
@@ -209,7 +208,7 @@ $gallery = array_unique($gallery);
 		font-size: 13px; padding: 6px 10px; border-radius: 6px; z-index: 2;
 	}
 
-	.product-thumbs { display: flex; gap: 8px; margin-top: 12px; overflow-x: auto; }
+	.product-thumbs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 	.product-thumb { flex-shrink: 0; width: 64px; height: 64px; border-radius: 6px; border: 1px solid #e0e0e0; padding: 0; background: none; cursor: pointer; overflow: hidden; }
 	.product-thumb.is-active { border-color: #000; border-width: 2px; }
 	.product-thumb img { width: 100%; height: 100%; object-fit: cover; }
@@ -283,7 +282,7 @@ $gallery = array_unique($gallery);
 	.spec-name { color: #000; font-weight: 700; }
 	.spec-value { color: #4f4f4f; }
 
-	.similar-products { margin: 10px 0; }
+	.similar-products { margin: 48px 0 10px; }
 	.similar-products__wrapper { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
 	.similar-products__title { font-size: 22px; font-weight: 600; margin-bottom: 24px; }
 	.similar-products__list { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px; }
@@ -577,8 +576,6 @@ $gallery = array_unique($gallery);
 	</section>
 
 	<?php include($_SERVER['DOCUMENT_ROOT'].'/source_include/foot.html'); ?>
-	<script src="/source_js/cart.js"></script>
-	<script src="/source_js/main.js" defer></script>
 	<script>
 	function ptSwitchImage(btn, src) {
 		document.getElementById('main-image').src = src;
