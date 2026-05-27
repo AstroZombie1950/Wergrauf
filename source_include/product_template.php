@@ -121,6 +121,40 @@ $similar_pool = array_values(array_filter($products, fn($p) => $p['slug'] !== $s
 shuffle($similar_pool);
 $similar = array_slice($similar_pool, 0, 6);
 
+// --- Товары из той же коллекции (все разделы) ---
+function get_collection_products(string $collection, string $current_slug): array {
+	if ($collection === '') return [];
+	$result = [];
+	foreach (array_keys(SECTION_NAMES) as $sec) {
+		$url = SECTION_URLS[$sec] ?? "/$sec/";
+		foreach (load_products($sec) as $p) {
+			if (($p['slug'] ?? '') === $current_slug) continue;
+			if ((int)($p['stock'] ?? 0) === 0) continue;
+			if (!empty($p['hidden'])) continue;
+			// Ищем spec_collection в specs[]
+			foreach ($p['specs'] ?? [] as $spec) {
+				if ($spec['key'] === 'spec_collection' && mb_strtolower(trim($spec['value'])) === mb_strtolower(trim($collection))) {
+					$p['_section_url'] = $url;
+					$result[] = $p;
+					break;
+				}
+			}
+		}
+	}
+	shuffle($result);
+	return array_slice($result, 0, 10);
+}
+
+// Коллекция текущего товара
+$current_collection = '';
+foreach ($product['specs'] ?? [] as $spec) {
+	if ($spec['key'] === 'spec_collection') {
+		$current_collection = $spec['value'];
+		break;
+	}
+}
+$collection_products = get_collection_products($current_collection, $slug);
+
 // --- Метатеги ---
 $meta_title = !empty($product['meta_title'])
 	? $product['meta_title']
@@ -283,6 +317,12 @@ $gallery = array_unique($gallery);
 	.spec-name { color: #000; font-weight: 700; }
 	.spec-value { color: #4f4f4f; }
 
+	/* Блок коллекции — аналогичен похожим */
+	.collection-products { margin: 48px 0 10px; }
+	.collection-products__wrapper { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+	.collection-products__title { font-size: 22px; font-weight: 600; margin-bottom: 24px; }
+	.collection-products__list { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px; }
+
 	.similar-products { margin: 48px 0 10px; }
 	.similar-products__wrapper { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
 	.similar-products__title { font-size: 22px; font-weight: 600; margin-bottom: 24px; }
@@ -393,7 +433,7 @@ $gallery = array_unique($gallery);
 					<!-- Промокод -->
 					<?php if (!empty($product['promo_code']) && !empty($product['discount_percent'])): ?>
 					<div class="product-coupon">
-						<div class="coupon-title">Скидка <?= pt_h($product['discount_percent']) ?>% при заказе от 2-х товаров</div>
+						<div class="coupon-title">Скидка <?= pt_h($product['discount_percent']) ?>%</div>
 						<div class="coupon-code">По промокоду: <strong><?= pt_h($product['promo_code']) ?></strong></div>
 					</div>
 					<?php endif ?>
@@ -523,6 +563,33 @@ $gallery = array_unique($gallery);
 	<?php endif ?>
 
 	<!-- Похожие товары -->
+	<?php if (!empty($collection_products)): ?>
+	<section class="collection-products">
+		<div class="collection-products__wrapper container">
+			<h2 class="collection-products__title">Другие товары из этой коллекции</h2>
+			<div class="collection-products__list">
+				<?php foreach ($collection_products as $cp):
+					$cp_disc = (!empty($cp['old_price']) && $cp['old_price'] > $cp['price'])
+						? round((1 - $cp['price'] / $cp['old_price']) * 100) : 0;
+				?>
+					<a href="<?= pt_h($cp['_section_url']) ?><?= pt_h($cp['slug']) ?>/" class="similar-product-card">
+						<div class="similar-product-card__image">
+							<?php if ($cp_disc > 0): ?>
+								<span class="similar-product-card__discount">-<?= $cp_disc ?>%</span>
+							<?php endif ?>
+							<img src="<?= pt_h($cp['image'] ?? '') ?>" alt="<?= pt_h($cp['name']) ?>" loading="lazy" width="240" height="240">
+						</div>
+						<div>
+							<div class="similar-product-card__name"><?= pt_h($cp['name']) ?></div>
+							<div class="similar-product-card__price"><?= pt_price($cp['price']) ?></div>
+						</div>
+					</a>
+				<?php endforeach ?>
+			</div>
+		</div>
+	</section>
+	<?php endif ?>
+
 	<?php if (!empty($similar)): ?>
 	<section class="similar-products">
 		<div class="similar-products__wrapper container">

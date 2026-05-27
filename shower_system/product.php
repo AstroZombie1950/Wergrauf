@@ -114,6 +114,40 @@ $similar_pool = array_values(array_filter($products, fn($p) => $p['slug'] !== $s
 shuffle($similar_pool);
 $similar = array_slice($similar_pool, 0, 6);
 
+// --- Товары из той же коллекции (все разделы) ---
+if (!function_exists('get_collection_products')) {
+	function get_collection_products(string $collection, string $current_slug): array {
+		if ($collection === '') return [];
+		$result = [];
+		foreach (array_keys(SECTION_NAMES) as $sec) {
+			$url = SECTION_URLS[$sec] ?? "/$sec/";
+			foreach (load_products($sec) as $p) {
+				if (($p['slug'] ?? '') === $current_slug) continue;
+				if ((int)($p['stock'] ?? 0) === 0) continue;
+				if (!empty($p['hidden'])) continue;
+				foreach ($p['specs'] ?? [] as $spec) {
+					if ($spec['key'] === 'spec_collection' && mb_strtolower(trim($spec['value'])) === mb_strtolower(trim($collection))) {
+						$p['_section_url'] = $url;
+						$result[] = $p;
+						break;
+					}
+				}
+			}
+		}
+		shuffle($result);
+		return array_slice($result, 0, 10);
+	}
+}
+
+$current_collection = '';
+foreach ($product['specs'] ?? [] as $spec) {
+	if ($spec['key'] === 'spec_collection') {
+		$current_collection = $spec['value'];
+		break;
+	}
+}
+$collection_products = get_collection_products($current_collection, $slug);
+
 // --- Метатеги ---
 $meta_title = !empty($product['meta_title'])
 	? $product['meta_title']
@@ -456,6 +490,12 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 	.spec-name { color: #000; font-weight: 700; }
 	.spec-value { color: #4f4f4f; }
 
+	/* --- Коллекция --- */
+	.collection-products { margin: 48px 0 10px; }
+	.collection-products__wrapper { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+	.collection-products__title { font-size: 22px; font-weight: 600; margin-bottom: 24px; }
+	.collection-products__list { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px; }
+
 	/* --- Похожие --- */
 	.similar-products { margin-top: 10px; margin-bottom: 10px; }
 	.similar-products__wrapper { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
@@ -599,7 +639,7 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 					<?php if (!empty($product['promo_code']) && !empty($product['discount_percent'])): ?>
 					<div class="product-coupon">
 						<div class="coupon-title">
-							Скидка <?= h($product['discount_percent']) ?>% при заказе от 2-х товаров
+							Скидка <?= h($product['discount_percent']) ?>%
 						</div>
 						<div class="coupon-code">
 							По промокоду: <strong><?= h($product['promo_code']) ?></strong>
@@ -744,6 +784,34 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 							<div class="spec-value"></div>
 						<?php endif ?>
 					</div>
+				<?php endforeach ?>
+			</div>
+		</div>
+	</section>
+	<?php endif ?>
+
+	<!-- Товары из коллекции -->
+	<?php if (!empty($collection_products)): ?>
+	<section class="collection-products">
+		<div class="collection-products__wrapper container">
+			<h2 class="collection-products__title">Другие товары из этой коллекции</h2>
+			<div class="collection-products__list">
+				<?php foreach ($collection_products as $cp):
+					$cp_disc = (!empty($cp['old_price']) && $cp['old_price'] > $cp['price'])
+						? round((1 - $cp['price'] / $cp['old_price']) * 100) : 0;
+				?>
+					<a href="<?= h($cp['_section_url']) ?><?= h($cp['slug']) ?>/" class="similar-product-card">
+						<div class="similar-product-card__image">
+							<?php if ($cp_disc > 0): ?>
+								<span class="similar-product-card__discount">-<?= $cp_disc ?>%</span>
+							<?php endif ?>
+							<img src="<?= h($cp['image'] ?? '') ?>" alt="<?= h($cp['name']) ?>" loading="lazy" width="240" height="240">
+						</div>
+						<div>
+							<div class="similar-product-card__name"><?= h($cp['name']) ?></div>
+							<div class="similar-product-card__price"><?= number_format((int)$cp['price'], 0, '.', ' ') ?> ₽</div>
+						</div>
+					</a>
 				<?php endforeach ?>
 			</div>
 		</div>
