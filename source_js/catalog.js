@@ -13,6 +13,7 @@ const filtersState = {
 	heaterShape: new Set(),
 	embedded:    false,
 	thermostat:  false,
+	builtIn:     false,
 };
 
 let allProducts      = [];
@@ -41,6 +42,7 @@ function init() {
 		_heaterShape: (p.spec_heater_shape  || '').toLowerCase(),
 		_embedded:    (p.spec_built_in      || '').toLowerCase() === 'да',
 		_thermostat:  (p.spec_thermostat    || '').toLowerCase() === 'да',
+		_builtIn:     (p.spec_built_in      || '').toLowerCase() === 'да',
 	}));
 
 	// Реальный диапазон цен
@@ -119,6 +121,7 @@ function applyFilters() {
 		if (filtersState.heaterShape.size && !filtersState.heaterShape.has(p._heaterShape)) return false;
 		if (filtersState.embedded   && !p._embedded)   return false;
 		if (filtersState.thermostat && !p._thermostat) return false;
+		if (filtersState.builtIn    && !p._builtIn)    return false;
 		return true;
 	});
 	renderProducts(filteredProducts);
@@ -200,6 +203,7 @@ function bindEvents() {
 		if (filter === 'heater_shape')toggleSet(filtersState.heaterShape, value, add);
 		if (value === 'embedded')     filtersState.embedded   = add;
 		if (value === 'thermostat')   filtersState.thermostat = add;
+		if (value === 'built_in')     filtersState.builtIn    = add;
 		applyFilters();
 	});
 
@@ -223,7 +227,7 @@ function bindEvents() {
 		filtersState.design.clear();
 		filtersState.heaterType.clear();
 		filtersState.heaterShape.clear();
-		filtersState.embedded = filtersState.thermostat = false;
+		filtersState.embedded = filtersState.thermostat = filtersState.builtIn = false;
 		document.querySelectorAll('.catalog-filters input[type="checkbox"]').forEach(i => i.checked = false);
 		minSlider.value = minSlider.min;
 		maxSlider.value = maxSlider.max;

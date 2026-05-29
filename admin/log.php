@@ -48,30 +48,23 @@ $log = read_sync_log();
 		.toolbar__title { font-size: 20px; font-weight: 600; flex: 1; }
 		.toolbar__sub { font-size: 13px; color: var(--muted); }
 
-		/* Запись лога */
 		.log-entry { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; box-shadow: var(--shadow); overflow: hidden; }
-
 		.log-entry__head { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--bg); border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; }
 		.log-entry__head:hover { background: #eceef2; }
-
 		.log-entry__date { font-weight: 600; font-size: 14px; }
 		.log-entry__summary { font-size: 13px; color: var(--muted); flex: 1; }
 		.log-entry__toggle { font-size: 12px; color: var(--accent); }
-
 		.log-entry__body { display: none; padding: 0; }
 		.log-entry__body.is-open { display: block; }
 
-		/* Таблица результатов */
 		table { width: 100%; border-collapse: collapse; }
 		td { padding: 9px 16px; font-size: 13px; border-bottom: 1px solid var(--border); }
 		tr:last-child td { border-bottom: none; }
-
 		.td-icon { width: 28px; text-align: center; }
 		.td-name { font-weight: 500; }
 		.td-count { color: var(--muted); }
 		.td-error { color: var(--danger); }
 
-		/* Пусто */
 		.empty { text-align: center; padding: 64px 24px; color: var(--muted); }
 		.empty strong { font-size: 16px; display: block; margin-bottom: 8px; }
 
@@ -106,7 +99,6 @@ $log = read_sync_log();
 		</div>
 	<?php else: ?>
 		<?php foreach ($log as $i => $entry):
-			// Считаем сводку по записи
 			$total_ok  = array_sum(array_column(array_filter($entry['results'], fn($r) => $r['success']), 'count'));
 			$has_error = count(array_filter($entry['results'], fn($r) => !$r['success'])) > 0;
 		?>
@@ -123,7 +115,6 @@ $log = read_sync_log();
 					</span>
 					<span class="log-entry__toggle" id="toggle-<?= $i ?>">▼ Подробнее</span>
 				</div>
-
 				<div class="log-entry__body" id="body-<?= $i ?>">
 					<table>
 						<?php foreach ($entry['results'] as $r): ?>

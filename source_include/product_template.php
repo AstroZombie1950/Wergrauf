@@ -63,7 +63,7 @@ function pt_color_info(string $code): array {
 	$map = [
 		'b'  => ['name' => 'Черный',         'hex' => '#1f1f1f'],
 		'ch' => ['name' => 'Хром',           'hex' => '#cfcfcf'],
-		'g'  => ['name' => 'Золото',         'hex' => '#c9a24d'],
+		'g'  => ['name' => 'Золото',         'hex' => '#F0B800'],
 		's'  => ['name' => 'Сатин',          'hex' => '#b8b0a0'],
 		'gr' => ['name' => 'Графит',         'hex' => '#5a5a5a'],
 		'w'  => ['name' => 'Белый',          'hex' => '#f0f0f0'],
@@ -633,26 +633,8 @@ $gallery = array_unique($gallery);
 	</section>
 
 	<!-- Отзывы -->
-	<section class="product-reviews container">
-		<h2 class="product-reviews__title">Отзывы покупателей</h2>
-		<div class="product-review">
-			<div class="product-review__header">
-				<div class="product-review__name">Анна Смирнова</div>
-				<div class="product-review__date">12 января 2024</div>
-			</div>
-			<div class="product-review__rating"><span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span></div>
-			<p class="product-review__text">Отличное качество, современный дизайн. Установка прошла без проблем, всё необходимое было в комплекте. Рекомендую!</p>
-		</div>
-		<div class="product-review">
-			<div class="product-review__header">
-				<div class="product-review__name">Дмитрий Ковалёв</div>
-				<div class="product-review__date">5 января 2024</div>
-			</div>
-			<div class="product-review__rating"><span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span></div>
-			<p class="product-review__text">Хорошая продукция за свои деньги. Качество сборки отличное, доставка быстрая, упаковано надёжно.</p>
-		</div>
-	</section>
-
+	<?php include $_SERVER['DOCUMENT_ROOT'] . '/source_include/reviews_block.php'; ?>
+	
 	<?php include($_SERVER['DOCUMENT_ROOT'].'/source_include/foot.html'); ?>
 	<script>
 	function ptSwitchImage(btn, src) {

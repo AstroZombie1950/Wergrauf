@@ -233,6 +233,15 @@ if ($is_logged_in) {
 	<a class="admin-nav__item admin-nav__item--active" href="/admin/">🗂 Дашборд</a>
 	<a class="admin-nav__item" href="/admin/home_edit.php">🏠 Главная страница</a>
 	<a class="admin-nav__item" href="/admin/log.php">📋 Лог синхронизаций</a>
+	<a class="admin-nav__item" href="/admin/reviews.php">💬 Отзывы<?php
+		$_rv_file = DATA_DIR . 'reviews.json';
+		if (file_exists($_rv_file)) {
+			$_rv_data = json_decode(file_get_contents($_rv_file), true) ?? [];
+			$_rv_n = 0;
+			foreach ($_rv_data as $_rv_list) foreach ($_rv_list as $_rv_r) if (empty($_rv_r['published'])) $_rv_n++;
+			if ($_rv_n > 0) echo ' <span style="background:#e53935;color:#fff;border-radius:99px;font-size:11px;font-weight:700;padding:1px 6px;vertical-align:middle">' . $_rv_n . '</span>';
+		}
+	?></a>
 </nav>
 
 <div class="page">

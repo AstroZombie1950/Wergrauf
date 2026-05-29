@@ -58,7 +58,7 @@ function color_info(string $code): array {
 	$map = [
 		'b'  => ['name' => 'Черный',        'hex' => '#1f1f1f'],
 		'ch' => ['name' => 'Хром',          'hex' => '#cfcfcf'],
-		'g'  => ['name' => 'Золото',        'hex' => '#c9a24d'],
+		'g'  => ['name' => 'Золото',        'hex' => '#F0B800'],
 		's'  => ['name' => 'Сатин',         'hex' => '#b8b0a0'],
 		'gr' => ['name' => 'Графит',        'hex' => '#5a5a5a'],
 		'w'  => ['name' => 'Белый',         'hex' => '#f0f0f0'],
@@ -877,39 +877,8 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 		</div>
 	</section>
 
-	<!-- Отзывы (статика) -->
-	<section class="product-reviews container">
-		<h2 class="product-reviews__title">Отзывы покупателей</h2>
-		<div class="product-review">
-			<div class="product-review__header">
-				<div class="product-review__name">Анна Смирнова</div>
-				<div class="product-review__date">12 января 2024</div>
-			</div>
-			<div class="product-review__rating">
-				<span class="star"></span><span class="star"></span><span class="star"></span>
-				<span class="star"></span><span class="star"></span>
-			</div>
-			<p class="product-review__text">
-				Прекрасная душевая система! Матовый чёрный цвет выглядит очень стильно и современно.
-				Качество материалов на высоте, чувствуется, что сделано на совесть.
-				Тропический душ — это невероятное удовольствие! Установка прошла без проблем.
-			</p>
-		</div>
-		<div class="product-review">
-			<div class="product-review__header">
-				<div class="product-review__name">Дмитрий Ковалёв</div>
-				<div class="product-review__date">5 января 2024</div>
-			</div>
-			<div class="product-review__rating">
-				<span class="star"></span><span class="star"></span><span class="star"></span>
-				<span class="star"></span><span class="star"></span>
-			</div>
-			<p class="product-review__text">
-				Хорошая система за свои деньги. Качество сборки отличное, дизайн современный.
-				Доставка была быстрой, упаковано всё надёжно.
-			</p>
-		</div>
-	</section>
+	<!-- Отзывы -->
+	<?php include $_SERVER['DOCUMENT_ROOT'] . '/source_include/reviews_block.php'; ?>
 
 	<?php include($_SERVER['DOCUMENT_ROOT'].'/source_include/foot.html'); ?>
 

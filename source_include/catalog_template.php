@@ -204,6 +204,20 @@ function ct_h(string $s): string {
 				</section>
 				<?php endif ?>
 
+				<!-- Встраиваемый -->
+				<?php if (in_array('built_in', $filters)): ?>
+				<section class="filter" id="filter-built-in">
+					<button class="filter-title" type="button">Тип установки</button>
+					<div class="filter-content">
+						<label class="filter-checkbox">
+							<input type="checkbox" value="built_in">
+							<span class="checkbox-ui"></span>
+							<span class="checkbox-label">Встраиваемый</span>
+						</label>
+					</div>
+				</section>
+				<?php endif ?>
+
 				<!-- Встраиваемая / Термостат (душевые) -->
 				<?php if (in_array('extra', $filters)): ?>
 				<section class="filter" id="filter-extra">
