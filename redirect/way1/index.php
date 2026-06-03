@@ -8,7 +8,6 @@
     <title>Wergrauf</title>
     <meta name="description" content="Интернет-магазин Верграуф.">
     <link rel="icon" href="https://wergrauf.ru/favicon.ico" type="image/svg+xml">
-    <link rel="canonical" href="https://wergrauf.ru/">
     <style>
         .list {
             margin: auto;
@@ -24,7 +23,7 @@
     </style>
 </head>
 <body style="background-color: #060606; margin: 0;">
-    <img src="https://wergrauf.ru/images/site_logo/full.webp" alt="Wergrauf logo" width="100%">
+    <img src="https://wergrauf.ru/images/site_logo/wergrauf_logo_small.png" alt="Wergrauf logo" width="100%">
     <div class="main">
         <ul class="list">страница сейчас откроется...</ul>
     </div>

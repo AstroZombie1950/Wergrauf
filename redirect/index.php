@@ -27,7 +27,7 @@
 </head>
 <body style="background-color: #060606; margin: 0;">
     <?php header("Refresh: 0; URL=https://wergrauf.ru"); ?>
-    <img src="https://wergrauf.ru/images/site_logo/full.webp" alt="Wergrauf logo" width="100%">
+    <img src="https://wergrauf.ru/images/site_logo/wergrauf_logo_small.png" alt="Wergrauf logo" width="100%">
     <div class="main">
         <ul class="list">
         </ul>

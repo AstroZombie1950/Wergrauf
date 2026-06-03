@@ -211,6 +211,7 @@ function write_sync_log(array $results): void {
 			'count'   => $r['count']   ?? 0,
 			'skipped' => $r['skipped'] ?? 0,
 			'error'   => $r['error']   ?? null,
+			'images'  => $r['images']  ?? null,
 		];
 	}
 

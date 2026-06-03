@@ -268,7 +268,7 @@ if ($is_logged_in) {
 						<span class="sync-result-row__icon"><?= $result['success'] ? '✅' : '❌' ?></span>
 						<span class="sync-result-row__name"><?= h(SECTION_NAMES[$section] ?? $section) ?></span>
 						<?php if ($result['success']): ?>
-							<span class="sync-result-row__meta">загружено: <?= $result['count'] ?>, пропущено: <?= $result['skipped'] ?></span>
+							<span class="sync-result-row__meta">загружено: <?= $result['count'] ?>, пропущено: <?= $result['skipped'] ?><?php if (!empty($result['images'])): ?> · фото: +<?= $result['images']['downloaded'] ?>, из кэша <?= $result['images']['skipped'] ?><?php if ($result['images']['failed']): ?>, ошибок <?= $result['images']['failed'] ?><?php endif; ?><?php endif; ?></span>
 						<?php else: ?>
 							<span class="sync-result-row__error"><?= h($result['error']) ?></span>
 						<?php endif ?>

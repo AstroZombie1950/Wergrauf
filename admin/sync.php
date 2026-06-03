@@ -15,6 +15,7 @@ const BASE_FIELDS = [
 // --- Синхронизировать все разделы ---
 function sync_all(): array {
 	$results = [];
+	@set_time_limit(0); // первая синхронизация может качать сотни изображений
 	if (!is_dir(DATA_DIR)) mkdir(DATA_DIR, 0755, true);
 	foreach (SHEET_MAP as $sheet_name => $section) {
 		$results[$section] = sync_sheet($sheet_name, $section);
@@ -73,10 +74,28 @@ function sync_sheet(string $sheet_name, string $section): array {
 		$overrides = json_decode(file_get_contents($override_file), true) ?? [];
 	}
 
+	// Локализация фото: внешние ссылки скачиваем к себе на хост
+	$img_stats = ['downloaded' => 0, 'skipped' => 0, 'failed' => 0, 'errors' => []];
+
 	foreach ($products as &$product) {
 		$article = (string)$product['article'];
-		if (isset($overrides[$article])) {
-			$product = array_merge($product, $overrides[$article]);
+		$ov      = $overrides[$article] ?? [];
+
+		// Фото из таблицы локализуем, кроме случаев, когда оно задано вручную в оверрайде
+		if (!isset($ov['image'])) {
+			$product['image'] = localize_image($product['image'] ?? '', $section, $product['slug'], '', $img_stats);
+		}
+		if (!isset($ov['gallery'])) {
+			$gallery = [];
+			foreach (($product['gallery'] ?? []) as $n => $g_url) {
+				$gallery[] = localize_image($g_url, $section, $product['slug'], '-' . ($n + 1), $img_stats);
+			}
+			$product['gallery'] = $gallery;
+		}
+
+		// Оверрайды поверх данных таблицы
+		if ($ov) {
+			$product = array_merge($product, $ov);
 		}
 	}
 	unset($product);
@@ -86,7 +105,21 @@ function sync_sheet(string $sheet_name, string $section): array {
 		json_encode($products, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
 	);
 
-	return ['success' => true, 'count' => count($products), 'skipped' => $skipped];
+	// Лог несработавших скачиваний — для ручной проверки/повтора
+	if (!empty($img_stats['errors'])) {
+		file_put_contents(
+			DATA_DIR . 'sync_images.log',
+			date('d.m.Y H:i:s') . " [$section]\n" . implode("\n", $img_stats['errors']) . "\n\n",
+			FILE_APPEND
+		);
+	}
+
+	return [
+		'success' => true,
+		'count'   => count($products),
+		'skipped' => $skipped,
+		'images'  => $img_stats,
+	];
 }
 
 // --- Разбор строки ---
@@ -124,6 +157,90 @@ function parse_row(array $row, array $headers): array {
 	$item['specs'] = $specs;
 
 	return $item;
+}
+
+// --- Скачать внешнее изображение на наш хост ---
+// true при успехе (файл сохранён), иначе false
+function download_image(string $url, string $dest): bool {
+	$bin = false;
+
+	if (function_exists('curl_init')) {
+		$ch = curl_init($url);
+		curl_setopt_array($ch, [
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_TIMEOUT        => 20,
+			CURLOPT_USERAGENT      => 'Mozilla/5.0 (compatible; WergraufBot/1.0)',
+		]);
+		$bin  = curl_exec($ch);
+		$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
+		if ($bin === false || $code >= 400) $bin = false;
+	} else {
+		$ctx = stream_context_create(['http' => [
+			'method'  => 'GET',
+			'timeout' => 20,
+			'header'  => "User-Agent: Mozilla/5.0 (compatible; WergraufBot/1.0)\r\n",
+		]]);
+		$bin = @file_get_contents($url, false, $ctx);
+	}
+
+	if ($bin === false || strlen($bin) < 100) return false;
+
+	// Проверяем, что это реально изображение
+	$mime = (new finfo(FILEINFO_MIME_TYPE))->buffer($bin);
+	if (!str_starts_with((string)$mime, 'image/')) return false;
+
+	return file_put_contents($dest, $bin) !== false;
+}
+
+// --- Локализовать одну ссылку на изображение ---
+// Внешняя ссылка → скачать к нам, вернуть локальный URL.
+// Уже локальная/пустая → вернуть как есть. При ошибке → вернуть исходную ссылку (запасную).
+function localize_image(string $url, string $section, string $slug, string $suffix, array &$stats): string {
+	$url = trim($url);
+	if ($url === '') return '';
+
+	// Уже на нашем хосте — ничего не делаем
+	if (str_starts_with($url, '/images/products/')) return $url;
+
+	// Не http(s) — оставляем как есть
+	if (!preg_match('~^https?://~i', $url)) return $url;
+
+	// Имя файла по слагу: только латиница, цифры, дефис
+	$safe_slug = preg_replace('/[^a-z0-9\-]/', '', strtolower($slug));
+	if ($safe_slug === '') $safe_slug = 'img';
+
+	// Расширение из ссылки, иначе webp по умолчанию
+	$ext = strtolower(pathinfo((string)parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
+	if (!in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'gif'], true)) $ext = 'webp';
+
+	$filename  = $safe_slug . $suffix . '.' . $ext;
+	$dir       = $_SERVER['DOCUMENT_ROOT'] . '/images/products/' . $section . '/';
+	$local_url = '/images/products/' . $section . '/' . $filename;
+	$dest      = $dir . $filename;
+
+	// Уже скачано — пропускаем (идемпотентность)
+	if (file_exists($dest)) {
+		$stats['skipped']++;
+		return $local_url;
+	}
+
+	if (!is_dir($dir) && !mkdir($dir, 0755, true)) {
+		$stats['failed']++;
+		$stats['errors'][] = $slug . ': не удалось создать папку ' . $dir;
+		return $url; // запасная внешняя ссылка
+	}
+
+	if (download_image($url, $dest)) {
+		$stats['downloaded']++;
+		return $local_url;
+	}
+
+	// Не скачалось — оставляем внешнюю ссылку, пишем в лог
+	$stats['failed']++;
+	$stats['errors'][] = $slug . ': ' . $url;
+	return $url;
 }
 
 // --- Нормализация заголовков → snake_case ---
