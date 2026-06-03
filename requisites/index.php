@@ -36,27 +36,22 @@
                 <div class="requisites-box">
                     <div class="requisites-item">
                         <strong>Наименование компании:</strong><br>
-                        ООО «WERGRAUF»
+                        Индивидуальный предприниматель Елистратов Алексей Романович
                     </div>
 
                     <div class="requisites-item">
-                        <strong>Юридический адрес:</strong><br>
+                        <strong>Фактический адрес:</strong><br>
                         г. Москва, ул. Новгородская, д. 22
                     </div>
 
                     <div class="requisites-item">
                         <strong>ИНН:</strong><br>
-                        ____________
+                        502919337872
                     </div>
 
                     <div class="requisites-item">
-                        <strong>КПП:</strong><br>
-                        ____________
-                    </div>
-
-                    <div class="requisites-item">
-                        <strong>ОГРН:</strong><br>
-                        ____________
+                        <strong>ОГРН/ОГРНИП:</strong><br>
+                        322508100387894
                     </div>
                 </div>
             </section>
@@ -67,22 +62,22 @@
                 <div class="requisites-box">
                     <div class="requisites-item">
                         <strong>Расчётный счёт:</strong><br>
-                        ____________
+                        40802810500000091828
                     </div>
 
                     <div class="requisites-item">
                         <strong>Банк:</strong><br>
-                        ____________
+                        ООО "ОЗОН Банк"
                     </div>
 
                     <div class="requisites-item">
                         <strong>БИК:</strong><br>
-                        ____________
+                        044525068
                     </div>
 
                     <div class="requisites-item">
                         <strong>Корреспондентский счёт:</strong><br>
-                        ____________
+                        30101810645374525068
                     </div>
                 </div>
             </section>
