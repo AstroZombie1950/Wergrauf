@@ -31,6 +31,11 @@ $static = [
 	['loc' => '/service/',          'priority' => '0.4',  'changefreq' => 'monthly'],
 	['loc' => '/partners/',         'priority' => '0.4',  'changefreq' => 'monthly'],
 	['loc' => '/instructions/',     'priority' => '0.4',  'changefreq' => 'monthly'],
+	['loc' => '/requisites/',      'priority' => '0.3',  'changefreq' => 'yearly'],
+	['loc' => '/rules/',           'priority' => '0.3',  'changefreq' => 'yearly'],
+	['loc' => '/confidentiality/', 'priority' => '0.3',  'changefreq' => 'yearly'],
+	['loc' => '/privacy_policy/',  'priority' => '0.3',  'changefreq' => 'yearly'],
+	['loc' => '/cookie/',          'priority' => '0.3',  'changefreq' => 'yearly'],
 ];
 
 /* Заголовок */

@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="origin-trial" content="">
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Инструкции по установке и эксплуатации | WERGRAUF</title>
     <meta name="description" content="Инструкции по установке, эксплуатации и уходу за сантехникой WERGRAUF. Смесители, душевые системы, комплектующие.">
     <meta name="keywords" content="WERGRAUF">

@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="origin-trial" content="">
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Самовывоз в Москве | WERGRAUF</title>
     <meta name="description" content="Самовывоз заказов WERGRAUF в Москве. Адрес пункта выдачи: ул. Новгородская, д. 22. Режим работы: ПН–ПТ с 10:00 до 18:00.">
     <meta name="keywords" content="WERGRAUF">

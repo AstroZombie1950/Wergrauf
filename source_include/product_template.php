@@ -183,7 +183,7 @@ $gallery = array_unique($gallery);
 <html lang="ru">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title><?= pt_h($meta_title) ?></title>
 	<meta name="description" content="<?= pt_h(mb_strimwidth($meta_desc, 0, 160, '…')) ?>">
 	<meta name="robots" content="index, follow">

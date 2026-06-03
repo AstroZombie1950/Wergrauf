@@ -17,7 +17,7 @@ function ct_h(string $s): string {
 <html lang="ru">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title><?= ct_h($section_name) ?> — купить в официальном магазине WERGRAUF, цены</title>
 	<meta name="description" content="<?= ct_h($section_name) ?> WERGRAUF — каталог моделей с ценами. Современный дизайн, быстрая доставка.">
 	<meta name="robots" content="index, follow">
@@ -259,7 +259,7 @@ function ct_h(string $s): string {
 	const ACTIVE_FILTERS  = <?= json_encode($filters) ?>;
 	</script>
 
-	<script src="/source_js/catalog.js"></script>
+	<script src="/source_js/catalog.js" defer></script>
 </div>
 </body>
 </html>

@@ -46,7 +46,7 @@ if (!empty($popular_ids)) {
 <html lang="ru">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title>Смесители и душевые системы WERGRAUF — официальный интернет-магазин</title>
 	<meta name="description" content="Смесители, душевые системы и аксессуары для душа и кухни — купите в официальном интернет-магазине WERGRAUF. Цены, характеристики, отзывы. Доставка по России.">
 	<meta name="keywords" content="WERGRAUF">
@@ -56,11 +56,47 @@ if (!empty($popular_ids)) {
 	<meta property="og:description" content="Смесители, душевые системы и аксессуары для душа и кухни — купите в официальном интернет-магазине WERGRAUF.">
 	<meta property="og:url" content="https://wergrauf.ru">
 	<meta property="og:image" content="https://wergrauf.ru/images/logo_img.png">
+	<link rel="canonical" href="https://wergrauf.ru/">
 	<link rel="icon" href="https://wergrauf.ru/favicon.ico" type="image/x-icon">
 	<link rel="stylesheet" href="/source_css/wg.css">
 	<link rel="stylesheet" href="/source_css/home.css">
+	<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js" defer></script>
+	<!-- Schema.org: организация и сайт -->
+	<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": "Organization",
+		"name": "WERGRAUF",
+		"legalName": "ООО «WERGRAUF»",
+		"url": "https://wergrauf.ru/",
+		"logo": "https://wergrauf.ru/images/logo_img.png",
+		"email": "wergraufru@yandex.ru",
+		"telephone": "+7 (977) 784-44-47",
+		"address": {
+			"@type": "PostalAddress",
+			"addressLocality": "Москва",
+			"streetAddress": "ул. Новгородская, д. 22",
+			"addressCountry": "RU"
+		},
+		"contactPoint": {
+			"@type": "ContactPoint",
+			"telephone": "+7 (977) 784-44-47",
+			"contactType": "sales",
+			"areaServed": "RU",
+			"availableLanguage": "Russian"
+		}
+	}
+	</script>
+	<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": "WebSite",
+		"name": "WERGRAUF",
+		"url": "https://wergrauf.ru/"
+	}
+	</script>
 </head>
 
 <body class="cms-index-index">

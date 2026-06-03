@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title>WERGRAUF | Страница не найдена</title>
 	<meta name="robots" content="noindex">
 	<link rel="icon" href="https://wergrauf.ru/favicon.ico" type="image/x-icon">

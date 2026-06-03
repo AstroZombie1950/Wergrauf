@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="origin-trial" content="">
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Ремонт и обслуживание | WERGRAUF</title>
     <meta name="description" content="Информация о ремонте и обслуживании продукции WERGRAUF. Гарантийный и постгарантийный ремонт, сроки и условия обслуживания.">
     <meta name="keywords" content="WERGRAUF">
