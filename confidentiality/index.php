@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="origin-trial" content="">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
-    <title>WERGRAUF | Политика конфиденциальности</title>
+    <title>Политика конфиденциальности | WERGRAUF</title>
     <meta name="description" content="Политика конфиденциальности сайта WERGRAUF. Условия сбора, использования и защиты персональных данных пользователей.">
     <meta name="keywords" content="WERGRAUF">
 	<meta name="robots" content="index, follow">

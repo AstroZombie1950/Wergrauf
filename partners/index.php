@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="origin-trial" content="">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
-    <title>WERGRAUF | Партнёрская программа — условия сотрудничества</title>
+    <title>Партнёрская программа — условия сотрудничества | WERGRAUF</title>
     <meta name="description" content="Партнёрская программа WERGRAUF. Условия сотрудничества для дизайнеров, строительных компаний и оптовых клиентов.">
     <meta name="keywords" content="WERGRAUF">
 	<meta name="robots" content="index, follow">

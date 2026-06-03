@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="origin-trial" content="">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
-    <title>WERGRAUF | Реквизиты компании</title>
+    <title>Реквизиты компании | WERGRAUF</title>
     <meta name="description" content="Реквизиты компании WERGRAUF. Юридическая информация и банковские реквизиты для сотрудничества и оплаты.">
     <meta name="keywords" content="WERGRAUF">
 	<meta name="robots" content="index, follow">

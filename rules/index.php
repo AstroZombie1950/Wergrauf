@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="origin-trial" content="">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
-    <title>WERGRAUF | Правила работы — условия обслуживания клиентов</title>
+    <title>Правила работы — условия обслуживания клиентов | WERGRAUF</title>
     <meta name="description" content="Правила работы компании WERGRAUF. Условия оформления заказов, оплаты, сроков выполнения и взаимодействия с клиентами.">
     <meta name="keywords" content="WERGRAUF">
 	<meta name="robots" content="index, follow">

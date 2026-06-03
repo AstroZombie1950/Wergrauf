@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="origin-trial" content="">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
-    <title>WERGRAUF | О компании</title>
+    <title>О компании | WERGRAUF</title>
     <meta name="description" content="Информация о компании WERGRAUF. Поставки сантехнического оборудования, контроль качества, надёжная логистика и профессиональный подход.">
     <meta name="keywords" content="WERGRAUF">
 	<meta name="robots" content="index, follow">

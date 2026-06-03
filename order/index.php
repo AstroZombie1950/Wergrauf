@@ -36,7 +36,7 @@ $status = $order ? ($status_labels[$order['status']] ?? $status_labels['new']) :
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
-	<title>WERGRAUF | <?= $order ? 'Заказ ' . oh($order['id']) : 'Заказ не найден' ?></title>
+	<title><?= $order ? 'Заказ ' . oh($order['id']) : 'Заказ не найден' ?> | WERGRAUF</title>
 	<meta name="robots" content="noindex">
 	<link rel="icon" href="https://wergrauf.ru/favicon.ico" type="image/x-icon">
 	<link rel="stylesheet" href="/source_css/wg.css" media="all">

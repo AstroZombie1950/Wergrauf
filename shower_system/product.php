@@ -149,9 +149,16 @@ foreach ($product['specs'] ?? [] as $spec) {
 $collection_products = get_collection_products($current_collection, $slug);
 
 // --- Метатеги ---
+// META-title из таблицы — как есть; иначе автогенерация (ключ вперёд)
 $meta_title = !empty($product['meta_title'])
 	? $product['meta_title']
-	: ($product['name'] . ' купить | WERGRAUF');
+	: ($product['name'] . ' купить — цена | WERGRAUF');
+
+// Наличие и срок цены для Schema.org (SCHEMA-OFFER — синхронизировать с product_template.php)
+$availability      = ((int)($product['stock'] ?? 0) > 0)
+	? 'https://schema.org/InStock'
+	: 'https://schema.org/OutOfStock';
+$price_valid_until = date('Y-m-d', strtotime('+1 year'));
 
 $meta_desc = !empty($product['meta_description'])
 	? $product['meta_description']
@@ -165,7 +172,7 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
-	<title>WERGRAUF | <?= h($meta_title) ?></title>
+	<title><?= h($meta_title) ?></title>
 	<meta name="description" content="<?= h(mb_strimwidth($meta_desc, 0, 160, '…')) ?>">
 	<meta name="robots" content="index, follow">
 	<meta property="og:type" content="product">
@@ -194,7 +201,8 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 			"@type": "Offer",
 			"price": "<?= $product['price'] ?>",
 			"priceCurrency": "RUB",
-			"availability": "https://schema.org/InStock",
+			"priceValidUntil": "<?= $price_valid_until ?>",
+			"availability": "<?= $availability ?>",
 			"url": "<?= $canonical ?>"
 		}
 	}

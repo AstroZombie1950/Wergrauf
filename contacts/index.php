@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="origin-trial" content="">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
-    <title>WERGRAUF | Контакты</title>
+    <title>Контакты | WERGRAUF</title>
     <meta name="description" content="Контактная информация компании WERGRAUF. Телефон, электронная почта, Telegram и WhatsApp для связи с клиентами.">
     <meta name="keywords" content="WERGRAUF">
 	<meta name="robots" content="index, follow">

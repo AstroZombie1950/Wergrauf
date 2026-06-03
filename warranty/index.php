@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="origin-trial" content="">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
-    <title>WERGRAUF | Гарантия на товары — условия гарантийного обслуживания</title>
+    <title>Гарантия на товары — условия гарантийного обслуживания | WERGRAUF</title>
     <meta name="description" content="Гарантийные обязательства компании WERGRAUF. Сроки гарантии, условия обслуживания и порядок обращения по гарантии.">
     <meta name="keywords" content="WERGRAUF">
 	<meta name="robots" content="index, follow">

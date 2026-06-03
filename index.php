@@ -47,7 +47,7 @@ if (!empty($popular_ids)) {
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
-	<title>WERGRAUF | Официальный интернет-магазин бренда</title>
+	<title>Смесители и душевые системы WERGRAUF — официальный интернет-магазин</title>
 	<meta name="description" content="Смесители, душевые системы и аксессуары для душа и кухни — купите в официальном интернет-магазине WERGRAUF. Цены, характеристики, отзывы. Доставка по России.">
 	<meta name="keywords" content="WERGRAUF">
 	<meta name="robots" content="index, follow">

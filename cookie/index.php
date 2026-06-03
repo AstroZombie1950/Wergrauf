@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="origin-trial" content="">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
-    <title>WERGRAUF | Политика использования файлов Cookie</title>
+    <title>Политика использования файлов Cookie | WERGRAUF</title>
     <meta name="description" content="Политика использования файлов cookie на сайте WERGRAUF. Информация о видах cookie, целях их применения и управлении настройками.">
     <meta name="keywords" content="WERGRAUF">
 	<meta name="robots" content="index, follow">
