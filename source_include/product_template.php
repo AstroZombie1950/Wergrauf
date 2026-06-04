@@ -656,6 +656,16 @@ $gallery = array_unique($gallery);
 		this.textContent = c.classList.contains('is-collapsed') ? 'Показать полностью' : 'Свернуть';
 	});
 	// корзина: cart.js
+
+	/* ecommerce: просмотр товара (Яндекс dataLayer) */
+	window.dataLayer = window.dataLayer || [];
+	window.dataLayer.push({ ecommerce: { currencyCode: 'RUB', detail: { products: [{
+		id:       <?= json_encode((string)$product['article']) ?>,
+		name:     <?= json_encode($product['name'], JSON_UNESCAPED_UNICODE) ?>,
+		price:    <?= (int)$product['price'] ?>,
+		brand:    'WERGRAUF',
+		category: <?= json_encode($section_name, JSON_UNESCAPED_UNICODE) ?>
+	}] } } });
 	</script>
 </div>
 </body>

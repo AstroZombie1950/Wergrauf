@@ -909,6 +909,16 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 
 	/* --- Корзина (заглушки, подключим позже) --- */
 	// корзина: cart.js
+
+	/* ecommerce: просмотр товара (Яндекс dataLayer) */
+	window.dataLayer = window.dataLayer || [];
+	window.dataLayer.push({ ecommerce: { currencyCode: 'RUB', detail: { products: [{
+		id:       <?= json_encode((string)$product['article']) ?>,
+		name:     <?= json_encode($product['name'], JSON_UNESCAPED_UNICODE) ?>,
+		price:    <?= (int)$product['price'] ?>,
+		brand:    'WERGRAUF',
+		category: 'Душевые системы'
+	}] } } });
 	</script>
 </div>
 </body>

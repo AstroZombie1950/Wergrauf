@@ -340,6 +340,8 @@
                                 if (data.ok) {
                                     input.value = '';
                                     button.textContent = data.message || 'Готово!';
+                                    /* цель Метрики: подписка */
+                                    if (typeof ym === 'function') ym(109618056, 'reachGoal', 'subscribe');
                                     setTimeout(function () {
                                         button.disabled = false;
                                         button.textContent = origText;

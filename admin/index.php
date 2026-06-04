@@ -242,6 +242,7 @@ if ($is_logged_in) {
 			if ($_rv_n > 0) echo ' <span style="background:#e53935;color:#fff;border-radius:99px;font-size:11px;font-weight:700;padding:1px 6px;vertical-align:middle">' . $_rv_n . '</span>';
 		}
 	?></a>
+	<a class="admin-nav__item" href="/admin/subscribers.php">✉️ Подписчики</a>
 </nav>
 
 <div class="page">

@@ -480,5 +480,63 @@ $status = $order ? ($status_labels[$order['status']] ?? $status_labels['new']) :
 })();
 </script>
 <?php endif ?>
+
+<?php /* Цели Метрики: заказ оформлен. one_click — подмножество order_success */ ?>
+<?php if ($order): ?>
+<?php
+	// Карта url раздела → категория (фронт admin/config не грузит)
+	$wg_section_names = [
+		'/shower_system/'   => 'Душевые системы',
+		'/kitchen_faucets/' => 'Кухонные смесители',
+		'/floor_faucets/'   => 'Напольные смесители',
+		'/bath_faucets/'    => 'Смесители для ванны',
+		'/sink_faucets/'    => 'Смесители для раковины',
+		'/hygienic_shower/' => 'Гигиенические души',
+		'/accessories/'     => 'Аксессуары',
+		'/towel_warmers/'   => 'Полотенцесушители',
+		'/components/'      => 'Комплектующие',
+	];
+	// Состав заказа для ecommerce purchase
+	$ec_products = [];
+	foreach (($order['items'] ?? []) as $it) {
+		$p = [
+			'id'       => (string)($it['article'] ?? ''),
+			'name'     => $it['name'] ?? '',
+			'price'    => (int)($it['effective_price'] ?? $it['price'] ?? 0),
+			'brand'    => 'WERGRAUF',
+			'quantity' => (int)($it['qty'] ?? 1),
+		];
+		$cat = $wg_section_names[$it['section_url'] ?? ''] ?? '';
+		if ($cat) $p['category'] = $cat;
+		$ec_products[] = $p;
+	}
+?>
+<script>
+	(function () {
+		if (typeof ym !== 'function') return;
+		// один раз на заказ за сессию (страница перезагружается при поллинге оплаты)
+		var key = 'wg_goal_' + <?= json_encode($order['id'], JSON_UNESCAPED_UNICODE) ?>;
+		try {
+			if (sessionStorage.getItem(key)) return;
+			sessionStorage.setItem(key, '1');
+		} catch (e) {}
+		ym(109618056, 'reachGoal', 'order_success');
+<?php if (($order['source'] ?? '') === 'one_click'): ?>
+		ym(109618056, 'reachGoal', 'one_click');
+<?php endif ?>
+		// ecommerce: покупка
+		window.dataLayer = window.dataLayer || [];
+		window.dataLayer.push({
+			ecommerce: {
+				currencyCode: 'RUB',
+				purchase: {
+					actionField: { id: <?= json_encode($order['id'], JSON_UNESCAPED_UNICODE) ?>, revenue: <?= (int)($order['total'] ?? 0) ?> },
+					products: <?= json_encode($ec_products, JSON_UNESCAPED_UNICODE) ?>
+				}
+			}
+		});
+	})();
+</script>
+<?php endif ?>
 </body>
 </html>

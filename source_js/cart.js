@@ -3,6 +3,43 @@
 
 const CART_KEY = 'wg_cart';
 
+/* ===== ECOMMERCE (Яндекс dataLayer) ===== */
+
+// url раздела → категория для отчётов Метрики
+const WG_SECTION_NAMES = {
+	'/shower_system/':   'Душевые системы',
+	'/kitchen_faucets/': 'Кухонные смесители',
+	'/floor_faucets/':   'Напольные смесители',
+	'/bath_faucets/':    'Смесители для ванны',
+	'/sink_faucets/':    'Смесители для раковины',
+	'/hygienic_shower/': 'Гигиенические души',
+	'/accessories/':     'Аксессуары',
+	'/towel_warmers/':   'Полотенцесушители',
+	'/components/':      'Комплектующие',
+};
+
+// товар корзины → объект для ecommerce
+function wgEcProduct(item, qty) {
+	const p = {
+		id:    String(item.article),
+		name:  item.name,
+		price: Number(item.price) || 0,
+		brand: 'WERGRAUF',
+	};
+	const cat = WG_SECTION_NAMES[item.section_url];
+	if (cat) p.category = cat;
+	if (qty != null) p.quantity = qty;
+	return p;
+}
+
+// пуш в dataLayer: action = add | remove | detail | purchase
+function wgEcommerce(action, products, actionField) {
+	window.dataLayer = window.dataLayer || [];
+	const data = { products: products };
+	if (actionField) data.actionField = actionField;
+	window.dataLayer.push({ ecommerce: { currencyCode: 'RUB', [action]: data } });
+}
+
 /* ===== STORAGE ===== */
 
 function cartLoad() {
@@ -20,7 +57,8 @@ function cartSave(items) {
 
 /* ===== OPERATIONS ===== */
 
-function cartAdd(product) {
+/* trackGoal=false — тихое добавление (один клик кладёт товар сам, цель там своя) */
+function cartAdd(product, trackGoal = true) {
 	const items = cartLoad();
 	const idx   = items.findIndex(i => i.article === product.article);
 	if (idx >= 0) {
@@ -30,10 +68,16 @@ function cartAdd(product) {
 	}
 	cartSave(items);
 	cartShowToast(product.name);
+	/* цель Метрики + ecommerce: добавление в корзину */
+	if (trackGoal && typeof ym === 'function') ym(109618056, 'reachGoal', 'cart_add');
+	if (trackGoal) wgEcommerce('add', [wgEcProduct(product, 1)]);
 }
 
 function cartRemove(article) {
-	cartSave(cartLoad().filter(i => i.article !== article));
+	const items = cartLoad();
+	const item  = items.find(i => i.article === article); // до удаления — нужен для ecommerce
+	cartSave(items.filter(i => i.article !== article));
+	if (item) wgEcommerce('remove', [wgEcProduct(item, item.qty)]);
 }
 
 function cartSetQty(article, qty) {
@@ -132,7 +176,7 @@ function _escHtml(str) {
 
 function oneClickOpen(product) {
 	const existing = cartLoad().find(i => i.article === product.article);
-	if (!existing) cartAdd(product);
+	if (!existing) cartAdd(product, false); // тихо: цель one_click сработает на /order/
 
 	document.getElementById('one-click-overlay')?.remove();
 
