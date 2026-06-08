@@ -241,8 +241,8 @@ $gallery = array_unique($gallery);
 	.product-card--media { grid-area: media; padding: 16px; min-width: 0; max-width: 100%; }
 	.product-card--info  { grid-area: info; min-width: 0; }
 
-	.product-image { position: relative; aspect-ratio: 1; overflow: hidden; border-radius: 12px; }
-	.product-image img { width: 100%; height: 100%; object-fit: cover; }
+	.product-image { position: relative; aspect-ratio: 3 / 4; overflow: hidden; border-radius: 12px; }
+	.product-image img { width: 100%; height: 100%; object-fit: contain; }
 
 	.product-discount {
 		position: absolute; top: 12px; right: 12px;
@@ -251,7 +251,7 @@ $gallery = array_unique($gallery);
 	}
 
 	.product-thumbs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-	.product-thumb { flex-shrink: 0; width: 64px; height: 64px; border-radius: 6px; border: 1px solid #e0e0e0; padding: 0; background: none; cursor: pointer; overflow: hidden; }
+	.product-thumb { flex-shrink: 0; width: 60px; height: 80px; border-radius: 6px; border: 1px solid #e0e0e0; padding: 0; background: none; cursor: pointer; overflow: hidden; }
 	.product-thumb.is-active { border-color: #000; border-width: 2px; }
 	.product-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -336,8 +336,8 @@ $gallery = array_unique($gallery);
 	.similar-products__title { font-size: 22px; font-weight: 600; margin-bottom: 24px; }
 	.similar-products__list { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px; }
 	.similar-product-card { flex: 0 0 240px; text-decoration: none; color: inherit; }
-	.similar-product-card__image { position: relative; aspect-ratio: 1; border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
-	.similar-product-card__image img { width: 100%; height: 100%; object-fit: cover; }
+	.similar-product-card__image { position: relative; aspect-ratio: 3 / 4; border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
+	.similar-product-card__image img { width: 100%; height: 100%; object-fit: contain; }
 	.similar-product-card__discount { position: absolute; top: 8px; right: 8px; background: #ff9800; color: #000; font-weight: 700; font-size: 12px; padding: 4px 8px; border-radius: 6px; }
 	.similar-product-card__name { font-size: 14px; line-height: 1.4; margin-bottom: 6px; }
 	.similar-product-card__price { font-size: 15px; font-weight: 600; }
@@ -404,14 +404,14 @@ $gallery = array_unique($gallery);
 							<span class="product-discount">-<?= $discount_pct ?>%</span>
 						<?php endif ?>
 						<img id="main-image" src="<?= pt_h($product['image'] ?? '') ?>"
-							alt="<?= pt_h($product['name']) ?>" width="600" height="600">
+							alt="<?= pt_h($product['name']) ?>" width="600" height="800">
 					</div>
 					<?php if (count($gallery) > 1): ?>
 					<div class="product-thumbs">
 						<?php foreach ($gallery as $i => $img): ?>
 							<button class="product-thumb <?= $i === 0 ? 'is-active' : '' ?>"
 								type="button" onclick="ptSwitchImage(this, '<?= pt_h($img) ?>')">
-								<img src="<?= pt_h($img) ?>" alt="" loading="lazy" width="64" height="64">
+								<img src="<?= pt_h($img) ?>" alt="" loading="lazy" width="60" height="80">
 							</button>
 						<?php endforeach ?>
 					</div>

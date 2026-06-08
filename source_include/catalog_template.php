@@ -69,7 +69,7 @@ function ct_h(string $s): string {
 	.product-card { background: #fff; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; height: 100%; position: relative; transition: box-shadow 0.2s; }
 	.product-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.1); }
 	.product-link { position: absolute; inset: 0; border-radius: 20px; z-index: 1; }
-	.product-image { display: flex; justify-content: center; align-items: center; margin-bottom: 16px; aspect-ratio: 1; overflow: hidden; }
+	.product-image { display: flex; justify-content: center; align-items: center; margin-bottom: 16px; aspect-ratio: 3 / 4; overflow: hidden; }
 	.product-image img { max-width: 100%; max-height: 100%; object-fit: contain; width: 100%; height: 100%; }
 	.product-badge-discount { position: absolute; top: 12px; right: 12px; background: #ff9800; color: #000; font-weight: 700; font-size: 12px; padding: 4px 8px; border-radius: 6px; z-index: 2; }
 	.product-title { font-size: 15px; font-weight: 500; color: #36393e; margin-bottom: 3px; line-height: 1.3; }

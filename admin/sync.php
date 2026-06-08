@@ -1,8 +1,10 @@
 <?php
 /* sync.php — синхронизация Google Sheets → JSON
-   Подключается из admin/index.php, напрямую недоступен */
+   Подключается из admin/index.php, напрямую недоступен.
+   Скачанные фото ужимаются и сохраняются в WebP. */
 
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/image.php';
 
 // Базовые поля — не попадают в specs
 const BASE_FIELDS = [
@@ -74,7 +76,7 @@ function sync_sheet(string $sheet_name, string $section): array {
 		$overrides = json_decode(file_get_contents($override_file), true) ?? [];
 	}
 
-	// Локализация фото: внешние ссылки скачиваем к себе на хост
+	// Локализация фото: внешние ссылки скачиваем к себе на хост (в WebP)
 	$img_stats = ['downloaded' => 0, 'skipped' => 0, 'failed' => 0, 'errors' => []];
 
 	foreach ($products as &$product) {
@@ -159,9 +161,9 @@ function parse_row(array $row, array $headers): array {
 	return $item;
 }
 
-// --- Скачать внешнее изображение на наш хост ---
-// true при успехе (файл сохранён), иначе false
-function download_image(string $url, string $dest): bool {
+// --- Скачать внешнее изображение → вернуть его байты ---
+// Строка с содержимым при успехе, иначе false
+function fetch_image_bytes(string $url): string|false {
 	$bin = false;
 
 	if (function_exists('curl_init')) {
@@ -191,11 +193,11 @@ function download_image(string $url, string $dest): bool {
 	$mime = (new finfo(FILEINFO_MIME_TYPE))->buffer($bin);
 	if (!str_starts_with((string)$mime, 'image/')) return false;
 
-	return file_put_contents($dest, $bin) !== false;
+	return $bin;
 }
 
 // --- Локализовать одну ссылку на изображение ---
-// Внешняя ссылка → скачать к нам, вернуть локальный URL.
+// Внешняя ссылка → скачать, ужать, сохранить в WebP, вернуть локальный URL.
 // Уже локальная/пустая → вернуть как есть. При ошибке → вернуть исходную ссылку (запасную).
 function localize_image(string $url, string $section, string $slug, string $suffix, array &$stats): string {
 	$url = trim($url);
@@ -207,15 +209,11 @@ function localize_image(string $url, string $section, string $slug, string $suff
 	// Не http(s) — оставляем как есть
 	if (!preg_match('~^https?://~i', $url)) return $url;
 
-	// Имя файла по слагу: только латиница, цифры, дефис
+	// Имя файла по слагу: только латиница, цифры, дефис. Расширение всегда .webp
 	$safe_slug = preg_replace('/[^a-z0-9\-]/', '', strtolower($slug));
 	if ($safe_slug === '') $safe_slug = 'img';
 
-	// Расширение из ссылки, иначе webp по умолчанию
-	$ext = strtolower(pathinfo((string)parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
-	if (!in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'gif'], true)) $ext = 'webp';
-
-	$filename  = $safe_slug . $suffix . '.' . $ext;
+	$filename  = $safe_slug . $suffix . '.webp';
 	$dir       = $_SERVER['DOCUMENT_ROOT'] . '/images/products/' . $section . '/';
 	$local_url = '/images/products/' . $section . '/' . $filename;
 	$dest      = $dir . $filename;
@@ -232,12 +230,13 @@ function localize_image(string $url, string $section, string $slug, string $suff
 		return $url; // запасная внешняя ссылка
 	}
 
-	if (download_image($url, $dest)) {
+	$bin = fetch_image_bytes($url);
+	if ($bin !== false && img_bin_to_webp($bin, $dest)) {
 		$stats['downloaded']++;
 		return $local_url;
 	}
 
-	// Не скачалось — оставляем внешнюю ссылку, пишем в лог
+	// Не скачалось/не обработалось — оставляем внешнюю ссылку, пишем в лог
 	$stats['failed']++;
 	$stats['errors'][] = $slug . ': ' . $url;
 	return $url;

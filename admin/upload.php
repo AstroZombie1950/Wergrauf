@@ -1,9 +1,11 @@
 <?php
 /* admin/upload.php — загрузка и удаление изображений товаров
-   Принимает POST-запросы из product_edit и product_new, возвращает JSON */
+   Принимает POST-запросы из product_edit и product_new, возвращает JSON.
+   Загруженное изображение ужимается и сохраняется в WebP. */
 
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/helpers.php';
+require_once __DIR__ . '/image.php';
 
 admin_check_auth();
 
@@ -43,6 +45,12 @@ if ($action === 'upload') {
 		exit;
 	}
 
+	// Защита от подделки источника
+	if (!is_uploaded_file($file['tmp_name'])) {
+		echo json_encode(['ok' => false, 'error' => 'Некорректный источник файла']);
+		exit;
+	}
+
 	// Проверяем расширение
 	$original_name = $file['name'];
 	$ext           = strtolower(pathinfo($original_name, PATHINFO_EXTENSION));
@@ -66,30 +74,32 @@ if ($action === 'upload') {
 		}
 	}
 
-	// Генерируем безопасное имя файла
+	// Безопасное имя без расширения — итог всегда .webp
 	$safe_name = preg_replace('/[^a-zA-Z0-9_\-\.]/', '_', pathinfo($original_name, PATHINFO_FILENAME));
 	$safe_name = trim($safe_name, '_');
-	$filename  = $safe_name . '.' . $ext;
+	if ($safe_name === '') $safe_name = 'img';
+	$filename  = $safe_name . '.webp';
 	$dest      = $upload_dir . $filename;
 
 	// Добавляем суффикс если файл уже существует
 	if (file_exists($dest)) {
 		$i = 1;
 		do {
-			$filename = $safe_name . '_' . $i . '.' . $ext;
+			$filename = $safe_name . '_' . $i . '.webp';
 			$dest     = $upload_dir . $filename;
 			$i++;
 		} while (file_exists($dest));
 	}
 
-	if (!move_uploaded_file($file['tmp_name'], $dest)) {
-		echo json_encode(['ok' => false, 'error' => 'Не удалось сохранить файл на сервер']);
+	// Ужимаем и сохраняем в WebP
+	if (!img_to_webp($file['tmp_name'], $dest)) {
+		echo json_encode(['ok' => false, 'error' => 'Не удалось обработать изображение']);
 		exit;
 	}
 
 	echo json_encode([
-		'ok'  => true,
-		'url' => $upload_url . $filename,
+		'ok'   => true,
+		'url'  => $upload_url . $filename,
 		'name' => $filename,
 	]);
 	exit;

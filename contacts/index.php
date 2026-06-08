@@ -79,7 +79,7 @@
 
             <section class="content-section">
                 <h2>Пункт самовывоза</h2>
-                <p>Вы можете самостоятельно забрать свои покупки при подтверждении наличия товара менеджером. <a class="contact-link" href="https://wergrauf.ru/contacts">Подробнее про самовывоз.</a></p>
+                <p>Вы можете самостоятельно забрать свои покупки при подтверждении наличия товара менеджером. <a class="contact-link" href="https://wergrauf.ru/pickup/">Подробнее про самовывоз.</a></p>
             </section>
 
             <section class="content-section">

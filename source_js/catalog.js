@@ -143,7 +143,7 @@ function renderProducts(list) {
 				<a href="${url}" class="product-link" aria-label="${esc(p.name)}"></a>
 				${discount ? `<span class="product-badge-discount">${discount}</span>` : ''}
 				<div class="product-image">
-					<img src="${esc(p.image || '')}" alt="${esc(p.name)}" loading="lazy" width="300" height="300">
+					<img src="${esc(p.image || '')}" alt="${esc(p.name)}" loading="lazy" width="600" height="800">
 				</div>
 				<h3 class="product-title">${esc(p.name)}</h3>
 				<div class="product-article">арт. ${esc(String(p.article))}</div>
