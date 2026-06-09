@@ -116,7 +116,7 @@ function ct_h(string $s): string {
 		<header class="catalog-header">
 			<h1 class="catalog-title"><?= ct_h($section_name) ?></h1>
 			<div class="catalog-meta">
-				<span class="catalog-count">Доступно товаров <strong id="product-count">0</strong></span>
+				<span class="catalog-count">Доступно товаров <strong id="product-count"><?= $count ?></strong></span>
 				<div class="catalog-sort">
 					<button type="button" data-sort="asc">Сначала дешевые</button>
 					<button type="button" data-sort="desc">Сначала дорогие</button>
@@ -246,7 +246,44 @@ function ct_h(string $s): string {
 						<path d="M2 5h16M5 10h10M8 15h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
 					</svg>
 				</button>
-				<div class="products-grid" id="products-grid"></div>
+				<div class="products-grid" id="products-grid">
+					<?php if (!$catalog_products): ?>
+						<div class="products-empty">Товары не найдены</div>
+					<?php else: $card_i = 0; foreach ($catalog_products as $p):
+						$p_url   = $section_url . ct_h($p['slug'] ?? '') . '/';
+						$p_price = (int)($p['price'] ?? 0);
+						$p_old   = (int)($p['old_price'] ?? 0);
+						$has_old = $p_old > $p_price;
+						$p_disc  = $has_old ? round((1 - $p_price / $p_old) * 100) : 0;
+						// Тот же payload, что catalogAddToCart ждёт в JS
+						$buy = str_replace('"', '&quot;', json_encode([
+							'article'          => (string)($p['article'] ?? ''),
+							'name'             => $p['name'] ?? '',
+							'price'            => $p_price,
+							'old_price'        => $p_old,
+							'image'            => $p['image'] ?? '',
+							'slug'             => $p['slug'] ?? '',
+							'section_url'      => $section_url,
+							'promo_code'       => $p['promo_code'] ?? '',
+							'discount_percent' => $p['discount_percent'] ?? '',
+						], JSON_UNESCAPED_UNICODE));
+					?>
+						<article class="product-card">
+							<a href="<?= $p_url ?>" class="product-link" aria-label="<?= ct_h($p['name'] ?? '') ?>"></a>
+							<?php if ($has_old): ?><span class="product-badge-discount"><?= $p_disc ?>%</span><?php endif ?>
+							<div class="product-image">
+								<img src="<?= ct_h($p['image'] ?? '') ?>" alt="<?= ct_h($p['name'] ?? '') ?>" loading="<?= $card_i < 3 ? 'eager' : 'lazy' ?>"<?= $card_i === 0 ? ' fetchpriority="high"' : '' ?> width="600" height="800">
+							</div>
+							<h3 class="product-title"><?= ct_h($p['name'] ?? '') ?></h3>
+							<div class="product-article">арт. <?= ct_h((string)($p['article'] ?? '')) ?></div>
+							<div class="product-price-wrap">
+								<span class="product-price"><?= number_format($p_price, 0, '', "\xC2\xA0") ?>&nbsp;₽</span>
+								<?php if ($has_old): ?><span class="product-price-old"><?= number_format($p_old, 0, '', "\xC2\xA0") ?>&nbsp;₽</span><?php endif ?>
+							</div>
+							<button class="product-buy" type="button" onclick="catalogAddToCart(<?= $buy ?>,event)">Купить</button>
+						</article>
+					<?php $card_i++; endforeach; endif ?>
+				</div>
 			</section>
 		</div>
 	</main>

@@ -250,7 +250,7 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 	/* --- Галерея --- */
 	.product-image {
 		position: relative;
-		aspect-ratio: 1;
+		aspect-ratio: 3 / 4;
 		overflow: hidden;
 		border-radius: 12px;
 	}
@@ -258,7 +258,7 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 	.product-image img {
 		width: 100%;
 		height: 100%;
-		object-fit: cover;
+		object-fit: contain;
 		transition: opacity 0.2s;
 	}
 
@@ -284,8 +284,8 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 
 	.product-thumb {
 		flex-shrink: 0;
-		width: 64px;
-		height: 64px;
+		width: 60px;
+		height: 80px;
 		border-radius: 6px;
 		border: 1px solid #e0e0e0;
 		padding: 0;
@@ -512,8 +512,8 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 	.similar-products__list { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px; }
 
 	.similar-product-card { flex: 0 0 240px; text-decoration: none; color: inherit; }
-	.similar-product-card__image { position: relative; aspect-ratio: 1; border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
-	.similar-product-card__image img { width: 100%; height: 100%; object-fit: cover; }
+	.similar-product-card__image { position: relative; aspect-ratio: 3 / 4; border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
+	.similar-product-card__image img { width: 100%; height: 100%; object-fit: contain; }
 	.similar-product-card__discount { position: absolute; top: 8px; right: 8px; background: #ff9800; color: #000; font-weight: 700; font-size: 12px; padding: 4px 8px; border-radius: 6px; }
 	.similar-product-card__name { font-size: 14px; line-height: 1.4; margin-bottom: 6px; }
 	.similar-product-card__price { font-size: 15px; font-weight: 600; }
@@ -595,7 +595,8 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 							id="main-image"
 							src="<?= h($product['image'] ?? '') ?>"
 							alt="<?= h($product['name']) ?>"
-							width="600" height="600"
+							width="600" height="800"
+							fetchpriority="high"
 						>
 					</div>
 
@@ -613,7 +614,7 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 							<button class="product-thumb <?= $i === 0 ? 'is-active' : '' ?>"
 								type="button"
 								onclick="switchImage(this, '<?= h($img) ?>')">
-								<img src="<?= h($img) ?>" alt="" loading="lazy" width="64" height="64">
+								<img src="<?= h($img) ?>" alt="" loading="lazy" width="60" height="80">
 							</button>
 						<?php endforeach ?>
 					</div>

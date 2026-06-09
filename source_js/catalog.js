@@ -134,7 +134,7 @@ function renderProducts(list) {
 		grid.innerHTML = '<div class="products-empty">Товары не найдены. Попробуйте изменить фильтры.</div>';
 		return;
 	}
-	grid.innerHTML = list.map(p => {
+	grid.innerHTML = list.map((p, i) => {
 		const url      = `${SECTION_URL}${p.slug}/`;
 		const discount = p.old_price > p.price
 			? Math.round((1 - p.price / p.old_price) * 100) + '%' : null;
@@ -143,7 +143,7 @@ function renderProducts(list) {
 				<a href="${url}" class="product-link" aria-label="${esc(p.name)}"></a>
 				${discount ? `<span class="product-badge-discount">${discount}</span>` : ''}
 				<div class="product-image">
-					<img src="${esc(p.image || '')}" alt="${esc(p.name)}" loading="lazy" width="600" height="800">
+					<img src="${esc(p.image || '')}" alt="${esc(p.name)}" loading="${i < 3 ? 'eager' : 'lazy'}"${i === 0 ? ' fetchpriority="high"' : ''} width="600" height="800">
 				</div>
 				<h3 class="product-title">${esc(p.name)}</h3>
 				<div class="product-article">арт. ${esc(String(p.article))}</div>

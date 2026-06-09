@@ -404,7 +404,7 @@ $gallery = array_unique($gallery);
 							<span class="product-discount">-<?= $discount_pct ?>%</span>
 						<?php endif ?>
 						<img id="main-image" src="<?= pt_h($product['image'] ?? '') ?>"
-							alt="<?= pt_h($product['name']) ?>" width="600" height="800">
+							alt="<?= pt_h($product['name']) ?>" width="600" height="800" fetchpriority="high">
 					</div>
 					<?php if (count($gallery) > 1): ?>
 					<div class="product-thumbs">
