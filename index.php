@@ -111,7 +111,7 @@ if (!empty($popular_ids)) {
 			<div id="cooperation-block" class="section-leader">
 				<div class="container">
 					<div class="block-header">
-						<h6 class="block-header__title">Лидер продаж</h6>
+						<h2 class="block-header__title">Лидер продаж</h2>
 					</div>
 					<div class="cooperation-main">
 						<div class="cooperation-main__image-container">
@@ -294,7 +294,7 @@ if (!empty($popular_ids)) {
 			<div id="solutions-block">
 				<div class="container">
 					<div class="solutions-description">
-						<h6 class="solutions__title">ГОТОВЫЕ РЕШЕНИЯ</h6>
+						<h2 class="solutions__title">ГОТОВЫЕ РЕШЕНИЯ</h2>
 						<div class="solutions__info">
 							<p class="solutions__info__caption">Выберите лучшее,<br>что предлагает <span class="nowrap">WERGRAUF</span><br>на сегодняшний день</p>
 							<div class="solutions__info__slogan slogan">
@@ -305,25 +305,25 @@ if (!empty($popular_ids)) {
 					<div class="solutions-variants">
 						<a href="https://wergrauf.ru/shower_system" class="solutions-variant">
 							<div class="solutions-variant__img-container">
-								<img class="solutions-variant__img" alt="Душ" src="images/solutions/001-shower.png" loading="lazy" width="940" height="1510">
+								<img class="solutions-variant__img" alt="Душ" src="images/solutions/001-shower.webp" loading="lazy" width="760" height="1221">
 							</div>
 							<button class="solutions-variant__button" type="button">Душ</button>
 						</a>
 						<a href="https://wergrauf.ru/bath_faucets" class="solutions-variant">
 							<div class="solutions-variant__img-container">
-								<img class="solutions-variant__img" alt="Ванная" src="images/solutions/002-bath.png" loading="lazy" width="940" height="1510">
+								<img class="solutions-variant__img" alt="Ванная" src="images/solutions/002-bath.webp" loading="lazy" width="760" height="1221">
 							</div>
 							<button class="solutions-variant__button" type="button">Ванная</button>
 						</a>
 						<a href="https://wergrauf.ru/towel_warmers" class="solutions-variant">
 							<div class="solutions-variant__img-container">
-								<img class="solutions-variant__img" alt="Полотенцесушители" src="images/solutions/003-heater.png" loading="lazy" width="940" height="1510">
+								<img class="solutions-variant__img" alt="Полотенцесушители" src="images/solutions/003-heater.webp" loading="lazy" width="760" height="1221">
 							</div>
 							<button class="solutions-variant__button" type="button">Полотенцесушители</button>
 						</a>
 						<a href="https://wergrauf.ru/kitchen_faucets" class="solutions-variant">
 							<div class="solutions-variant__img-container">
-								<img class="solutions-variant__img" alt="Кухня" src="images/solutions/004-kitchen.png" loading="lazy" width="940" height="1510">
+								<img class="solutions-variant__img" alt="Кухня" src="images/solutions/004-kitchen.webp" loading="lazy" width="760" height="1221">
 							</div>
 							<button class="solutions-variant__button" type="button">Кухня</button>
 						</a>
@@ -336,7 +336,7 @@ if (!empty($popular_ids)) {
 			<div id="promotions-block">
 				<div class="container">
 					<div class="block-header">
-						<h6 class="block-header__title">Акции</h6>
+						<h2 class="block-header__title">Акции</h2>
 					</div>
 					<div class="promotions-tiles">
 						<?php foreach ($promos as $promo): ?>
@@ -387,7 +387,7 @@ if (!empty($popular_ids)) {
 			<div id="showroom-block">
 				<div class="container">
 					<div class="block-header">
-						<h6 class="block-header__title">Пункт выдачи заказов <span class="nowrap">в Москве</span></h6>
+						<h2 class="block-header__title">Пункт выдачи заказов <span class="nowrap">в Москве</span></h2>
 						<a href="https://yandex.ru/maps/?um=constructor%3Afc2e623f23fd011579b421fde8a1b71561730592f9ebab57f7fd429163a3bc4f&source=constructorStati" target="_blank" rel="noopener" class="block-header__button">
 							Показать на карте
 							<span class="button-icon" aria-hidden="true">
@@ -410,10 +410,34 @@ if (!empty($popular_ids)) {
 								</div>
 							</div>
 						</div>
-						<!-- Яндекс-карта -->
-						<div class="image-map">
-							<script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Afc2e623f23fd011579b421fde8a1b71561730592f9ebab57f7fd429163a3bc4f&amp;width=100%25&amp;height=400&amp;lang=ru_RU&amp;scroll=true"></script>
-						</div>
+						<!-- Яндекс-карта: ленивая загрузка при скролле -->
+						<div class="image-map" id="ymap-lazy" data-ymap="https://yandex.ru/map-widget/v1/?um=constructor%3Afc2e623f23fd011579b421fde8a1b71561730592f9ebab57f7fd429163a3bc4f&amp;source=constructor&amp;lang=ru_RU&amp;scroll=true"></div>
+						<script>
+						(function () {
+							// Карта грузится только когда блок подходит к экрану
+							var box = document.getElementById('ymap-lazy');
+							if (!box) return;
+							function loadMap() {
+								if (box.dataset.loaded) return;
+								box.dataset.loaded = '1';
+								var f = document.createElement('iframe');
+								f.src = box.dataset.ymap;
+								f.title = 'Карта проезда к пункту выдачи WERGRAUF в Москве';
+								f.width = '100%';
+								f.height = '400';
+								f.loading = 'lazy';
+								f.frameBorder = '0';
+								f.setAttribute('allowfullscreen', 'true');
+								f.style.display = 'block';
+								box.appendChild(f);
+							}
+							if (!('IntersectionObserver' in window)) { loadMap(); return; }
+							var io = new IntersectionObserver(function (entries) {
+								if (entries[0].isIntersecting) { loadMap(); io.disconnect(); }
+							}, { rootMargin: '300px' });
+							io.observe(box);
+						})();
+						</script>
 					</div>
 				</div>
 			</div>
@@ -422,7 +446,7 @@ if (!empty($popular_ids)) {
 			<div id="cooperation-block" class="section-cooperation">
 				<div class="container">
 					<div class="block-header">
-						<h6 class="block-header__title">Сотрудничество</h6>
+						<h2 class="block-header__title">Сотрудничество</h2>
 					</div>
 					<div class="cooperation-main">
 						<div class="cooperation-main__image-container">

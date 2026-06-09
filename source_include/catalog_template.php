@@ -137,8 +137,8 @@ function ct_h(string $s): string {
 					<div class="filter-content">
 						<div class="price-range">
 							<div class="price-slider-wrapper">
-								<input type="range" class="price-slider price-min" min="0" max="100000" step="500" value="0">
-								<input type="range" class="price-slider price-max" min="0" max="100000" step="500" value="100000">
+								<input type="range" class="price-slider price-min" min="0" max="100000" step="500" value="0" aria-label="Минимальная цена">
+								<input type="range" class="price-slider price-max" min="0" max="100000" step="500" value="100000" aria-label="Максимальная цена">
 							</div>
 							<div class="price-values">
 								<span class="price-value-min">0 ₽</span>
