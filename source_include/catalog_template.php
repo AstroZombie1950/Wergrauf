@@ -26,6 +26,7 @@ function ct_h(string $s): string {
 	<meta property="og:url" content="https://wergrauf.ru<?= $section_url ?>">
 	<meta property="og:image" content="https://wergrauf.ru/images/logo_img.png">
 	<link rel="canonical" href="https://wergrauf.ru<?= $section_url ?>">
+	<link rel="preconnect" href="https://mc.yandex.ru" crossorigin>
 	<link rel="icon" href="/favicon.ico" type="image/x-icon">
 	<link rel="stylesheet" type="text/css" href="/source_css/wg.css" media="all">
 	<script type="application/ld+json">

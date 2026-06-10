@@ -57,6 +57,7 @@ if (!empty($popular_ids)) {
 	<meta property="og:url" content="https://wergrauf.ru">
 	<meta property="og:image" content="https://wergrauf.ru/images/logo_img.png">
 	<link rel="canonical" href="https://wergrauf.ru/">
+	<link rel="preconnect" href="https://mc.yandex.ru" crossorigin>
 	<link rel="icon" href="https://wergrauf.ru/favicon.ico" type="image/x-icon">
 	<link rel="stylesheet" href="/source_css/wg.css">
 	<link rel="stylesheet" href="/source_css/home.css">
