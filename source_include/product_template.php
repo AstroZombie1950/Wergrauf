@@ -386,6 +386,7 @@ $gallery = array_unique($gallery);
 <div class="page-wrapper">
 	<?php include($_SERVER['DOCUMENT_ROOT'].'/source_include/head.html'); ?>
 
+	<main>
 	<section class="product-hero">
 		<div class="product-hero__wrapper container">
 			<nav class="product-breadcrumbs">
@@ -403,15 +404,15 @@ $gallery = array_unique($gallery);
 						<?php if ($discount_pct > 0): ?>
 							<span class="product-discount">-<?= $discount_pct ?>%</span>
 						<?php endif ?>
-						<img id="main-image" src="<?= pt_h($product['image'] ?? '') ?>"
+						<img id="main-image" src="<?= pt_h(wg_img_variant($product['image'] ?? '', '-card')) ?>"
 							alt="<?= pt_h($product['name']) ?>" width="600" height="800" fetchpriority="high">
 					</div>
 					<?php if (count($gallery) > 1): ?>
 					<div class="product-thumbs">
 						<?php foreach ($gallery as $i => $img): ?>
 							<button class="product-thumb <?= $i === 0 ? 'is-active' : '' ?>"
-								type="button" onclick="ptSwitchImage(this, '<?= pt_h($img) ?>')">
-								<img src="<?= pt_h($img) ?>" alt="" loading="lazy" width="60" height="80">
+								type="button" aria-label="Фото <?= $i + 1 ?>" onclick="ptSwitchImage(this, '<?= pt_h(wg_img_variant($img, '-card')) ?>')">
+								<img src="<?= pt_h(wg_img_variant($img, '-thumb')) ?>" alt="" loading="lazy" width="60" height="80">
 							</button>
 						<?php endforeach ?>
 					</div>
@@ -537,7 +538,7 @@ $gallery = array_unique($gallery);
 
 				<!-- ОПИСАНИЕ -->
 				<div class="product-description">
-					<h3 class="product-description__title">Описание</h3>
+					<h2 class="product-description__title">Описание</h2>
 					<div class="product-description__content is-collapsed" id="desc-content">
 						<?= nl2br(pt_h($product['description'] ?? '')) ?>
 					</div>
@@ -585,7 +586,7 @@ $gallery = array_unique($gallery);
 							<?php if ($cp_disc > 0): ?>
 								<span class="similar-product-card__discount">-<?= $cp_disc ?>%</span>
 							<?php endif ?>
-							<img src="<?= pt_h($cp['image'] ?? '') ?>" alt="<?= pt_h($cp['name']) ?>" loading="lazy" width="240" height="240">
+							<img src="<?= pt_h(wg_img_variant($cp['image'] ?? '', '-card')) ?>" alt="<?= pt_h($cp['name']) ?>" loading="lazy" width="240" height="240">
 						</div>
 						<div>
 							<div class="similar-product-card__name"><?= pt_h($cp['name']) ?></div>
@@ -612,7 +613,7 @@ $gallery = array_unique($gallery);
 							<?php if ($sp_disc > 0): ?>
 								<span class="similar-product-card__discount">-<?= $sp_disc ?>%</span>
 							<?php endif ?>
-							<img src="<?= pt_h($sp['image'] ?? '') ?>" alt="<?= pt_h($sp['name']) ?>" loading="lazy" width="240" height="240">
+							<img src="<?= pt_h(wg_img_variant($sp['image'] ?? '', '-card')) ?>" alt="<?= pt_h($sp['name']) ?>" loading="lazy" width="240" height="240">
 						</div>
 						<div>
 							<div class="similar-product-card__name"><?= pt_h($sp['name']) ?></div>
@@ -642,6 +643,7 @@ $gallery = array_unique($gallery);
 
 	<!-- Отзывы -->
 	<?php include $_SERVER['DOCUMENT_ROOT'] . '/source_include/reviews_block.php'; ?>
+	</main>
 	
 	<?php include($_SERVER['DOCUMENT_ROOT'].'/source_include/foot.html'); ?>
 	<script>

@@ -272,9 +272,9 @@ function ct_h(string $s): string {
 							<a href="<?= $p_url ?>" class="product-link" aria-label="<?= ct_h($p['name'] ?? '') ?>"></a>
 							<?php if ($has_old): ?><span class="product-badge-discount"><?= $p_disc ?>%</span><?php endif ?>
 							<div class="product-image">
-								<img src="<?= ct_h($p['image'] ?? '') ?>" alt="<?= ct_h($p['name'] ?? '') ?>" loading="<?= $card_i < 3 ? 'eager' : 'lazy' ?>"<?= $card_i === 0 ? ' fetchpriority="high"' : '' ?> width="600" height="800">
+								<img src="<?= ct_h(wg_img_variant($p['image'] ?? '', '-card')) ?>" alt="<?= ct_h($p['name'] ?? '') ?>" loading="<?= $card_i < 3 ? 'eager' : 'lazy' ?>"<?= $card_i === 0 ? ' fetchpriority="high"' : '' ?> width="600" height="800">
 							</div>
-							<h3 class="product-title"><?= ct_h($p['name'] ?? '') ?></h3>
+							<h2 class="product-title"><?= ct_h($p['name'] ?? '') ?></h2>
 							<div class="product-article">арт. <?= ct_h((string)($p['article'] ?? '')) ?></div>
 							<div class="product-price-wrap">
 								<span class="product-price"><?= number_format($p_price, 0, '', "\xC2\xA0") ?>&nbsp;₽</span>

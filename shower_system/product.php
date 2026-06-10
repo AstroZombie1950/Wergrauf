@@ -571,6 +571,7 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 <div class="page-wrapper">
 	<?php include($_SERVER['DOCUMENT_ROOT'].'/source_include/head.html'); ?>
 
+	<main>
 	<section class="product-hero">
 		<div class="product-hero__wrapper container">
 
@@ -593,7 +594,7 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 						<?php endif ?>
 						<img
 							id="main-image"
-							src="<?= h($product['image'] ?? '') ?>"
+							src="<?= h(wg_img_variant($product['image'] ?? '', '-card')) ?>"
 							alt="<?= h($product['name']) ?>"
 							width="600" height="800"
 							fetchpriority="high"
@@ -613,8 +614,9 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 						<?php foreach ($gallery as $i => $img): ?>
 							<button class="product-thumb <?= $i === 0 ? 'is-active' : '' ?>"
 								type="button"
-								onclick="switchImage(this, '<?= h($img) ?>')">
-								<img src="<?= h($img) ?>" alt="" loading="lazy" width="60" height="80">
+								aria-label="Фото <?= $i + 1 ?>"
+								onclick="switchImage(this, '<?= h(wg_img_variant($img, '-card')) ?>')">
+								<img src="<?= h(wg_img_variant($img, '-thumb')) ?>" alt="" loading="lazy" width="60" height="80">
 							</button>
 						<?php endforeach ?>
 					</div>
@@ -760,7 +762,7 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 
 				<!-- ОПИСАНИЕ -->
 				<div class="product-description">
-					<h3 class="product-description__title">Описание</h3>
+					<h2 class="product-description__title">Описание</h2>
 					<div class="product-description__content is-collapsed" id="desc-content">
 						<?= nl2br(h($product['description'] ?? '')) ?>
 					</div>
@@ -814,7 +816,7 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 							<?php if ($cp_disc > 0): ?>
 								<span class="similar-product-card__discount">-<?= $cp_disc ?>%</span>
 							<?php endif ?>
-							<img src="<?= h($cp['image'] ?? '') ?>" alt="<?= h($cp['name']) ?>" loading="lazy" width="240" height="240">
+							<img src="<?= h(wg_img_variant($cp['image'] ?? '', '-card')) ?>" alt="<?= h($cp['name']) ?>" loading="lazy" width="240" height="240">
 						</div>
 						<div>
 							<div class="similar-product-card__name"><?= h($cp['name']) ?></div>
@@ -843,7 +845,7 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 							<?php if ($sp_discount > 0): ?>
 								<span class="similar-product-card__discount">-<?= $sp_discount ?>%</span>
 							<?php endif ?>
-							<img src="<?= h($sp['image'] ?? '') ?>" alt="<?= h($sp['name']) ?>" loading="lazy" width="240" height="240">
+							<img src="<?= h(wg_img_variant($sp['image'] ?? '', '-card')) ?>" alt="<?= h($sp['name']) ?>" loading="lazy" width="240" height="240">
 						</div>
 						<div class="similar-product-card__info">
 							<div class="similar-product-card__name"><?= h($sp['name']) ?></div>
@@ -888,6 +890,7 @@ $canonical = 'https://wergrauf.ru/shower_system/' . h($slug) . '/';
 
 	<!-- Отзывы -->
 	<?php include $_SERVER['DOCUMENT_ROOT'] . '/source_include/reviews_block.php'; ?>
+	</main>
 
 	<?php include($_SERVER['DOCUMENT_ROOT'].'/source_include/foot.html'); ?>
 

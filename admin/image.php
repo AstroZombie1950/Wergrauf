@@ -4,8 +4,16 @@
    Используется в upload.php (ручная загрузка) и sync.php (синхронизация),
    а также в optimize_images.php (разовый батч). */
 
-const IMG_MAX_SIDE = 1000; // максимум по длинной стороне, px
+const IMG_MAX_SIDE = 1000; // максимум по длинной стороне, px (оригинал/галерея)
 const IMG_QUALITY  = 82;   // качество WebP, 0–100
+
+// Производные варианты: суффикс => [длинная сторона, качество]
+// card  — карточки каталога, главное фото товара, блок «похожие»
+// thumb — превью под главным фото
+const IMG_VARIANTS = [
+	'-card'  => [600, 80],
+	'-thumb' => [160, 78],
+];
 
 // --- Путь с любым расширением → тот же путь с .webp ---
 function img_webp_path(string $path): string {
@@ -75,4 +83,24 @@ function img_bin_to_webp(string $bin, string $dest_webp, int $max = IMG_MAX_SIDE
 	$ok = img_to_webp($tmp, $dest_webp, $max, $quality);
 	@unlink($tmp);
 	return $ok;
+}
+
+// --- Путь варианта: вставить суффикс перед .webp ---
+// /path/slug.webp + '-card' → /path/slug-card.webp
+function img_variant_path(string $webp_path, string $suffix): string {
+	return preg_replace('/\.webp$/i', '', $webp_path) . $suffix . '.webp';
+}
+
+// --- Сгенерировать производные варианты (card, thumb) рядом с оригиналом ---
+// $src_webp — путь к уже сохранённому оригиналу .webp.
+// Идемпотентно: существующие варианты пропускаются. Возвращает число созданных.
+function img_make_variants(string $src_webp): int {
+	if (!is_file($src_webp)) return 0;
+	$made = 0;
+	foreach (IMG_VARIANTS as $suffix => [$side, $quality]) {
+		$dest = img_variant_path($src_webp, $suffix);
+		if (is_file($dest)) continue; // уже есть
+		if (img_to_webp($src_webp, $dest, $side, $quality)) $made++;
+	}
+	return $made;
 }

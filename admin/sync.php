@@ -221,6 +221,7 @@ function localize_image(string $url, string $section, string $slug, string $suff
 	// Уже скачано — пропускаем (идемпотентность)
 	if (file_exists($dest)) {
 		$stats['skipped']++;
+		img_make_variants($dest); // догенерим card/thumb, если их ещё нет
 		return $local_url;
 	}
 
@@ -233,6 +234,7 @@ function localize_image(string $url, string $section, string $slug, string $suff
 	$bin = fetch_image_bytes($url);
 	if ($bin !== false && img_bin_to_webp($bin, $dest)) {
 		$stats['downloaded']++;
+		img_make_variants($dest); // card/thumb рядом с оригиналом
 		return $local_url;
 	}
 

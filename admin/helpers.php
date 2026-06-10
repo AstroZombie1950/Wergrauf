@@ -308,3 +308,20 @@ function time_ago(int $timestamp): string {
 	if ($diff < 86400) return (int)($diff / 3600) . ' ч. назад';
 	return date('d.m.Y H:i', $timestamp);
 }
+
+// --- URL уменьшенного варианта картинки ---
+// $url — локальный URL вида /images/products/.../slug.webp
+// $suffix — '-card' или '-thumb'
+// Возвращает URL варианта, если файл существует на диске; иначе исходный URL.
+// Безопасно для внешних/пустых ссылок — отдаёт их как есть.
+function wg_img_variant(string $url, string $suffix): string {
+	if ($url === '' || !str_starts_with($url, '/images/products/') || !str_ends_with($url, '.webp')) {
+		return $url;
+	}
+	$variant_url = preg_replace('/\.webp$/', $suffix . '.webp', $url);
+	static $cache = [];
+	if (!isset($cache[$variant_url])) {
+		$cache[$variant_url] = is_file($_SERVER['DOCUMENT_ROOT'] . $variant_url);
+	}
+	return $cache[$variant_url] ? $variant_url : $url;
+}

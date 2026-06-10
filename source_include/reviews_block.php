@@ -39,7 +39,7 @@ $rv_avg      = reviews_avg($rv_list);
 .rv-item__photo img { width: 100%; height: 100%; object-fit: cover; }
 
 /* Пусто */
-.rv__empty { padding: 32px 0; color: #8a8f9a; font-size: 14px; }
+.rv__empty { padding: 32px 0; color: #6a6f7a; font-size: 14px; }
 
 /* Лайтбокс */
 .rv-lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.85); z-index: 9999; align-items: center; justify-content: center; }
